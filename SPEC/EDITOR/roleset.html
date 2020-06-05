@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>权限设置表格页面</title>
+         <script type="text/javascript" src="/DNA/EXF/sysbase/sysjs.js"></script>
+         <script type="text/javascript" src="/DNA/EXF/sysbase/jquery.min.js"></script>
+         <link rel="stylesheet" href="/FACE/superui/css/base.css">
+<link rel="stylesheet" href="/FACE/superui/fonts/iconfont.css">
+<link rel="stylesheet" href="/FACE/superui/layui/css/layui.css">
+<link rel="stylesheet" href="/FACE/superui/css/base_fontSize.css">
+<link rel="stylesheet" href="/FACE/jseditor/css/asidenav.css">
+<link rel="stylesheet" href="/FACE/jseditor/css/font-awesome.min.css">
+<link rel="stylesheet" href="/FACE/jseditor/built-editor.css">
+<link rel="stylesheet" href="/FACE/imginout/css/boxImg.css">
+
+         <script type="text/javascript" src="/FACE/superui/laydate/laydate.js"></script>
+<script type="text/javascript" src="/FACE/superui/framework/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/FACE/superui/js/base.js"></script>
+<script type="text/javascript" src="/FACE/superui/layui/layui.js"></script>
+<script type="text/javascript" src="/FACE/superui/framework/cframe.js"></script>
+<script type="text/javascript" src="/FACE/superui/framework/printThis.js"></script>
+<script type="text/javascript" src="/FACE/jseditor/built-editor.min.js"></script>
+<script type="text/javascript" src="/FACE/xuanxiangka/js/tab.js"></script>
+
+         
+
+
+<style>
+ .frameTop .logo{
+ float: left;
+ height: 50px;
+ padding: 0 5px;
+ overflow: hidden;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameTop .logo img{
+ width: 40px;
+ height: 40px;
+ border-radius: 5px;
+ margin-top: 5px;
+ float: left;
+}
+.frameTop .logo h1{
+ font-size: 14px;
+    font-weight: 500;
+ height: 50px;
+ line-height: 50px;
+ float: right;
+ margin-left: 10px;
+ color: #FFF;
+}
+/**frameTop**/
+.frameTop{
+ width: 100%;
+ height: 50px;
+ background-color: #333300;
+ position: relative;
+    z-index: 1;
+}
+.frameTop .shrinkBut{
+ height: 50px;
+ float: left;
+ padding: 0 10px;
+ position: relative;
+}
+.frameTop .shrinkBut .hoverBox{
+ width: 0px;
+    height: 2px;
+    background-color: #FF9966;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 30px;
+}
+.frameTop .shrinkBut ul{
+ overflow: hidden;
+}
+.frameTop .shrinkBut ul li{
+ height: 50px;
+ float: left;
+ margin: 0 20px;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameTop .shrinkBut ul li a{
+ display: block;
+ width: 100%;
+ height: 50px;
+}
+.frameTop .shrinkBut ul li i{
+ height: 50px;
+ line-height: 50px;
+ display: block;
+ color: #FFF;
+ font-size: 14px;
+}
+.frameTop .topMenu{
+ height: 50px;
+ float: right;
+ padding-right: 10px;
+}
+.frameTop .topMenu .hoverBox{
+ width: 0px;
+    height: 2px;
+    background-color: #FF9966;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 30px;
+}
+.frameTop .topMenu ul li{
+ float: left;
+ position: relative;
+ z-index: 1;
+ background-color: transparent;
+}
+.frameTop .topMenu ul li a{
+ padding: 0 20px;
+ height: 50px;
+ line-height: 50px;
+ display: block;
+ color: #FFF;
+ position: relative;
+}
+.frameTop .topMenu ul li a font{
+ display: block;
+ float: left;
+ max-width: 100px;
+ height: 50px;
+ overflow: hidden;
+ margin-right: 10px;
+}
+.frameTop .topMenu ul li a .news{
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ z-index: 1;
+ margin-top: -8px;
+ margin-left: 3px;
+ width: 6px;
+ height: 6px;
+ line-height: 6px;
+ text-align: center;
+ font-size: 12px;
+ border-radius: 50%;
+ display: block;
+ background-color: #FF5722;
+ color: #FFF;
+}
+.frameTop .topMenu ul li a i{
+ float: left;
+ font-size: 14px;
+ color: #FFF;
+}
+.frameTop .topMenu ul li dl{
+ min-width: 98px;
+ position: absolute;
+ top: 45px;
+ right: 10px;
+ z-index: 2;
+ float: right;
+ background-color: #FFF;
+ border: 1px solid #CCC;
+ border-radius: 4px;
+ padding: 5px 0;
+ display: none;
+ -webkit-box-shadow: 0 2px 4px rgba(0,0,0,.12);
+ -moz-box-shadow: 0 2px 4px rgba(0,0,0,.12);
+ -o-box-shadow: 0 2px 4px rgba(0,0,0,.12);
+ box-shadow: 0 2px 4px rgba(0,0,0,.12);
+}
+.frameTop .topMenu ul li:hover dl{
+ display: block;
+}
+.frameTop .topMenu ul li dl dt{
+ height: 40px;
+}
+.frameTop .topMenu ul li dl dt a{
+ height: 40px;
+ line-height: 40px;
+ color: #333;
+}
+.frameTop .topMenu ul li dl dt a:hover{
+ background-color: #F0F0F0;
+}
+/**菜单**/
+.frameMenu{
+ width: 230px;
+ background-color: #333300;
+ float: left;
+ overflow: hidden;
+ position: relative;
+ z-index: 1;
+}
+.frameMenu .menuBox{
+ position: relative;
+}
+.frameMenu .menuFrist{
+ width: 50px;
+ overflow-x: hidden;
+ overflow-y: auto;
+ position: fixed;
+ top: 50px;
+ left: 0;
+ z-index: 2;
+ background-color: #333300;
+ border-top: 1px solid #393d41;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameMenu .menuFrist ul{
+ width: 230px;
+ padding: 5px 0;
+}
+.frameMenu .menuFrist ul li a{
+ display: block;
+ width: 100%;
+ height: 40px;
+ line-height: 40px;
+ color: #b0b0b2;
+ padding: 0 10px 0 20px;
+ position: relative;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameMenu .menuFrist ul li a.active{
+ background-color: #FF9966;
+ color: #FFF;
+}
+.frameMenu .menuFrist ul li a i.left{
+ width: 18px;
+ text-align: center;
+ float: left;
+ color: #b0b0b2;
+ margin-right: 7px;
+ font-size: 14px;
+ position: absolute;
+ top: 0;
+ left: 16px;
+ z-index: 1;
+}
+.frameMenu .menuFrist ul li a.active i.left{
+ color: #FFF;
+}
+.frameMenu .menuFrist ul li a font{
+ font-size: 12px;
+ position: absolute;
+ top: 0;
+ left: 20px;
+ z-index: 1;
+ padding-left: 25px;
+ display: none;
+}
+.frameMenu .menuFrist ul li a i.right{
+ float: right;
+ color: #b0b0b2;
+ font-size: 12px;
+}
+.frameMenu .menuFrist ul li a:hover{
+ color: #FFF;
+ background-color: #111;
+}
+.frameMenu .menuFrist ul li a:hover i.left{
+ color: #FFF;
+}
+.frameMenu .menu{
+ width: 200px;
+ overflow-x: hidden;
+ overflow-y: auto;
+ position: relative;
+    background-color: #eaedf1;
+    position: absolute;
+    top: 0;
+    left: 50px;
+ z-index: 1;
+}
+.frameMenu .menu .menuShrink{
+ width: 20px;
+ height: 50px;
+ line-height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 210px;
+    margin-top: -25px;
+    z-index: 2;
+    background: url(/FACE/superui/images/menuShrink.png) no-repeat;
+    font-size: 16px;
+ color: #333;
+    cursor: pointer;
+    padding-left: 7px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.frameMenu .menu .menuShrink:hover{
+ text-align: center;
+    background: url(/FACE/superui/images/menuShrink_hover.png) no-repeat;
+    padding-left: 0px;
+}
+.frameMenu .menu .menuShrink_z{
+ width: 20px;
+ height: 50px;
+ line-height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50px;
+    margin-top: -25px;
+    z-index: 2;
+    background: url(/FACE/superui/images/menuShrink_z.png) no-repeat;
+    font-size: 16px;
+ color: #333;
+    cursor: pointer;
+    padding-right: 7px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.frameMenu .menu .menuShrink_z:hover{
+ text-align: center;
+    background: url(/FACE/superui/images/menuShrink_z_hover.png) no-repeat;
+    padding-right: 0px;
+}
+.frameMenu .menu .hoverBox{
+ width: 3px;
+    height: 40px;
+    background-color: #FF9966;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.frameMenu .menu .menuName{
+ width: 180px;
+ height: 70px;
+ line-height: 70px;
+ background-color: #D9DEE4;
+ padding-left: 15px;
+ font-weight: bold;
+ -webkit-box-sizing: border-box;
+ -moz-box-sizing: border-box;
+ box-sizing: border-box;
+}
+.frameMenu .menu ul{
+ width: 180px;
+}
+.frameMenu .menu ul li a{
+ display: block;
+ width: 100%;
+ height: 40px;
+ line-height: 40px;
+ font-size: 12px;
+ color: #373d41;
+ padding: 0 15px 0 10px;
+ position: relative;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameMenu .menu ul li a i.left{
+ width: 18px;
+ text-align: center;
+ float: left;
+ color: #b0b0b2;
+ margin-right: 7px;
+ font-size: 16px;
+ position: absolute;
+ top: 0;
+ left: 20px;
+ z-index: 1;
+}
+.frameMenu .menu ul li a font{
+ width: 130px;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+ overflow:hidden;
+ position: absolute;
+ top: 0;
+ left: 20px;
+ z-index: 1;
+}
+.frameMenu .menu ul li a i.right{
+ float: right;
+ color: #373d41;
+ font-size: 16px;
+}
+.frameMenu .menu ul li a:hover i.left{
+ color: #FFF;
+}
+.frameMenu .menu dl{
+ display: none;
+}
+.frameMenu .menu dl dt a{
+ display: block;
+ width: 100%;
+ height: 40px;
+ line-height: 40px;
+ color: #373d41;
+ padding: 0 10px 0 30px;
+ box-sizing:border-box;
+ -moz-box-sizing:border-box; /* Firefox */
+ -webkit-box-sizing:border-box; /* Safari */
+}
+.frameMenu .menu dl dt a:hover{
+ background-color: #F3F5F7 !important;
+}
+/* block */
+#block{margin:15px auto 0;width:auto;padding-right:5px;padding-left:5px;clear:both;overflow:hidden;border:10px solid #eee;}
+.h{font-family:"微软雅黑";padding:13px 0 10px 5px;color:#666;font-size:18px;font-weight:400;border-bottom:1px solid #eee;text-transform:uppercase;letter-spacing:1px;}
+.tabs .bullet{border-right:1px solid #e00;color:#d00;font-weight:400;margin:10px 4px 4px 0;padding-right:4px;clear:right;display:block;float:left;height:17px;overflow:hidden;text-align:right;width:10px;}
+.bmod .bullet{background-color:#fff;margin:-9px 6px 0 -10px;padding:8px;}
+.tabs{margin-top:2px;overflow:hidden;}
+.tabs li{background-color:#EEEEEE;clear:both;margin:4px 0;padding:9px;}
+.tabs li a:hover{padding-left:1px;}
+.select{color:#d00;}
+</style>
+<link rel="stylesheet" type="text/css" href="/FACE/selectx/css/fSelect.css" >
+<script src="/FACE/selectx/js/fSelect.js"></script>
+<script>
+ lay('#version').html('-v'+ laydate.v);
+function laydatex(eid){
+ laydate.render({
+    elem: '#'+eid 
+ });
+}
+function laydttmx(eid){
+  laydate.render({
+      elem: '#'+eid
+      ,type: 'datetime'
+  });
+}
+</script>
+<link rel="stylesheet" type="text/css" href="/FACE/xiandaigan/css/normalize.css" />
+<!--布局,可无视-->
+<link rel="stylesheet" type="text/css" href="/FACE/xiandaigan/css/demo.css">
+<!--核心插件样式-->
+<link rel="stylesheet" href="/FACE/xiandaigan/css/notiflix-1.3.0.min.css">
+<script src="/FACE/xiandaigan/js/notiflix-1.3.0.min.js" type="text/javascript"></script>
+<script>
+function layupload(eid,urlx){
+   layui.use(['upload','laydate'], function(eid,urlx) {
+    var $ = layui.jquery,
+    upload = layui.upload;
+      //普通图片上传
+      upload.render({
+       elem: eid,
+       url: urlx,
+       done: function(res) {
+        //如果上传失败
+        if(res.code > 0) {
+         return layer.msg('上传失败');
+        }
+        //上传成功
+       }
+      });
+     });
+}
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+ // 更多新闻
+ function ml_close_demo() {
+  $('.float-news').animate({
+        left: '-450px'
+     }, 300, function(){
+        $('.float-open').delay(50).animate({
+          left: '-2px'
+        }, 300);
+     });
+ }
+ function ml_open_demo() {
+  $('.float-open').animate({
+        left: '-70px'
+     }, 100, function(){
+        $('.float-news').delay(50).animate({
+          left: '0px'
+        }, 300);
+     });
+ }
+ 
+ $('.float-close').click(function(){
+     ml_close_demo();
+     return false;
+ });
+ $('.open-btn').click(function(){
+     ml_open_demo();
+     return false;
+ });
+ 
+ setTimeout(function(){ml_close_demo()},1000);
+ 
+});
+</script>
+<script>
+ require(["orion/editor/edit"], function(edit) {
+  edit({className: "editor"});
+ });
+</script>
+<style type="text/css">
+ * {
+  padding: 0;
+  margin: 0;
+  font-family: "microsoft yahei";
+ }
+ 
+ ul li {
+  list-style-type: none;
+ }
+ 
+ .box {
+  width: 200px;
+  /*border: 1px solid red;*/
+ }
+ 
+ ul {
+  margin-left: 20px;
+  /*border: 1px solid blue;*/
+ }
+ 
+ .menuUl li {
+  margin: 10px 0;
+ }
+ 
+ .menuUl li span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+ }
+ 
+ .menuUl li i { margin-right: 10px; top: 0px; cursor: pointer; color: #161616;    }
+       .div-inline{ overflow-y:scroll;} 
+</style>
+<style type="text/css">
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{_background-image:url(about:blank);/*用浏览器空白页面作为背景*/_background-attachment:fixed; /* prevent screen flash in IE6 确保滚动条滚动时,元素不闪动*/ }
+body{font:12px/180% Arial, Helvetica, sans-serif, "新宋体";background:#E3E4E2;}
+/* float-news  display:inline;*/
+.float-news,.float-open{background:#fbfbfb;border:2px solid #e1e1e1;border-left:0 none;border-top-right-radius:4px;border-bottom-right-radius:4px;box-shadow:1px 1px 2px rgba(0, 0, 0, 0.5);display:inline-block;font-size:16px;}
+.float-news{height:880px;left:0px;padding:10px 15px;width:300px;z-index:100;top:20px;_margin-top:117px;}
+.float-open{height:58px;left:70px;padding:4px 4px 4px 6px;width:58px;z-index:99;top:36px;_margin-top:26px;}
+.float-news,.float-open{position:fixed;*zoom:1;_position:absolute;_top:expression(eval(document.documentElement.scrollTop));}
+.float-close{background:url(/SPEC/EDITOR/SOURCE/sys_control_php/images/nav-close.png) no-repeat left top;overflow:hidden;;height:48px;opacity:.6;filter:alpha(opacity=60);position:absolute;right:9px;text-indent:100%;top:10px;white-space:nowrap;width:48px;}
+.open-btn{background:url(/SPEC/EDITOR/SOURCE/sys_control_php/images/ml-open-demo.png) no-repeat left top;display:block;overflow:hidden;height:48px;opacity:.6;filter:alpha(opacity=60);text-indent:100%;white-space:nowrap;width:48px;}
+.float-close:hover,.open-btn:hover{opacity:1;filter:alpha(opacity=100);}
+.newslist h3{color:#333;border-bottom:4px solid #F2F2F2;font-size:26px;height:54px;line-height:54px;font-family:Microsoft Yahei,simsun,arial,sans-serif;}
+.newslist ul{margin-top:10px;}
+.newslist li{position:relative;height:30px;line-height:30px;font-size:14px;border-bottom:1px #ccc dotted}
+.newslist li a{color:#404040;}
+.newslist li span{position:absolute;right:0;color:#ccc;}
+.newslist li:last-child{border-bottom:0;}
+</style>
+<style>
+.demo-input{padding-left: 10px; height: 38px; min-width: 132px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+.lift-nav{
+    position: fixed;
+    top: 150px;
+    left: 0px;
+}
+.lift-nav li{
+    width: 75px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+    padding: 0px 5px;
+    margin-bottom: 5px;
+    background: skyblue;
+    cursor: pointer;
+}
+.lift-nav li.current{
+    background: tomato;
+}
+.readonly{
+ disabled:true;
+}
+.layui-btn{
+background-color: #1786af;
+}
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+background-color: #1786af;
+}
+</style>
+<style>
+.nav{margin-top:200px;}
+.nav *{text-decoration:none;font-size:9pt;}
+.nav * a:hover{background-color:#82ce18;/* 鼠标经过时的红色背景,可自定义 */}
+.menut{list-style:none;height:40px;width:100%;background-color:#333;margin-top:10px;}
+.nav{list-style:none;height:40px;width:900px;margin:0 auto;background-color:#333;}
+.nav li{float:left;border-left:1px solid #4a4a4a;border-right:1px solid #242424;border-top:1px solid #4a4a4a;border-bottom:1px solid #242424;position:relative;}
+.nav li a{color:#fff;height:38px;line-height:38px;font-weight:bold;padding:0 20px;blr:expression(this.onFocus=this.close());blr:expression(this.onFocus=this.blur());display:inline-block;}
+.nav li a:focus{-moz-outline-style: none; }
+.nav li .sub-nav{position:absolute;top:39px;left:-1px;list-style:none;background-color:#333;display:none;}
+.nav li .sub-nav li{text-align:center;clear:left;width:140px;height:35px;line-height:35px;position:relative;}
+.nav li .sub-nav li a{height:34px;line-height:34px;width:138px;padding:0;display:inline-block;}
+</style>
+
+
+</head>
+<body>
+
+
+  <div id="topcontent">    <div class="menut">
+        <ul class="nav">
+            <li><a href="" onclick=""></a>
+                <ul class="sub-nav">
+                    <li><a href="" onclick=""></a></li>
+                </ul>
+</li>
+        </ul>
+    </div></div> 
+ <div class="float-open" id="float-open" style="left:-2px;"><a class="open-btn" onclick="toxx()" href="javascript:void(0);"></a></div>
+<div class="float-news" id="float-news" style="left:-450px;overflow:scroll;">
+ <a class="float-close" href="javascript:void(0);">X</a>
+[newsdata]
+</div><!--news-->
+<div style="margin-top:6px;width:100%;height:33px;"></div>
+ <div class="oldTable" style="overflow: auto; height: auto; magin-top: 150px;" id="htmllist">[shortdata]</div>
+<div>
+    <svg width="0" height="0">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"></feGaussianBlur>
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"></feColorMatrix>
+                <feComposite in="SourceGraphic" in2="goo" operator="atop"></feComposite>
+            </filter>
+        </defs>
+    </svg>
+    <div class="aside-nav bounceInUp animated" id="aside-nav">
+        <label for="" class="aside-menu" title="按住拖动">操作</label>
+        <a href="javascript:totb();" title="表格" class="menu-item menu-first">表格</a>
+        <a href="javascript:uptb()" title="短数据" class="menu-item menu-second">短数据</a>
+        <a href="javascript:tofun()" title="函数" class="menu-item menu-third">函数</a>
+        <a href="javascript:topmt()" title="权限" class="menu-item menu-line menu-fourth">权限</a> 
+    </div>
+</div>
+
+ 
+
+
+<script type="text/javascript" src="/FACE/jseditor/js/asidenav.js"></script>
+<script type="text/javascript" src="/FACE/inputpm/js/num-alignment.js"></script>
+<script type="text/javascript" src="/FACE/processdiv/js/progressBar.js"></script>
+<script type="text/javascript" src="/FACE/imginout/js/boxImg.js"></script>
+<script>
+ $(function(){
+  Notiflix.Notify.Init();
+  Notiflix.Report.Init();
+  Notiflix.Confirm.Init();
+  Notiflix.Loading.Init({
+   clickToClose:true
+  });
+ });
+</script>
+<script type="text/javascript">
+      //图片上传预览    IE是用了滤镜。
+        function previewImage(file,key,sno)
+        {
+          var MAXWIDTH  = 260; 
+          var MAXHEIGHT = 180;
+          var div = document.getElementById('pv'+key+sno);
+          if (file.files && file.files[0])
+          {
+              div.innerHTML ='<img id=imghead'+key+sno+'>';
+              var img = document.getElementById('imghead'+key+sno);
+              img.onload = function(){
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width  =  rect.width;
+                img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top+'px';
+              }
+              var reader = new FileReader();
+              reader.onload = function(evt){img.src = evt.target.result;}
+              reader.readAsDataURL(file.files[0]);
+          }
+          else //兼容IE
+          {
+            var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead'+key+sno+'>';
+            var img = document.getElementById('imghead'+key+sno);
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+            div.innerHTML = "<div id=divhead"+sno+" style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+          }
+        }
+        function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+            var param = {top:0, left:0, width:width, height:height};
+            if( width>maxWidth || height>maxHeight )
+            {
+                rateWidth = width / maxWidth;
+                rateHeight = height / maxHeight;
+                
+                if( rateWidth > rateHeight )
+                {
+                    param.width =  maxWidth;
+                    param.height = Math.round(height / rateWidth);
+                }else
+                {
+                    param.width = Math.round(width / rateHeight);
+                    param.height = maxHeight;
+                }
+            }
+            
+            param.left = Math.round((maxWidth - param.width) / 2);
+            param.top = Math.round((maxHeight - param.height) / 2);
+            return param;
+        }
+</script> 
+<script> 
+function topage(ttx,pgu){
+location.href=pgu;
+}
+function upfl(sno,tb,key){
+          var srcd=$("#imghead"+key+sno).attr("src");
+          var x=ajaxhtmlpost('/DNA/EXF/anyfun.php?fid=anyrcvimg&tbnm='+tb+'&SNO='+sno+'&key='+key,'src='+srcd);          
+           if(x=="1"){
+             alert("成功");
+           };
+     }
+</script> 
+<script>
+//修改规格
+function specificationsBut(){
+layui.use('layer', function() {
+var layer = layui.layer;
+//iframe层-父子操作
+layer.open({
+type: 2,
+area: ['70%', '60%'],
+fixed: false, //不固定
+maxmin: true,
+content: 'specifications_list.html'
+});
+});
+}
+//修改按钮
+var updateFrame = null;
+function updateBut(){
+layui.use('layer', function() {
+var layer = layui.layer;
+//iframe层-父子操作
+updateFrame = layer.open({
+                    title: "商品信息修改",
+type: 2,
+area: ['70%', '60%'],
+scrollbar: false,//默认：true,默认允许浏览器滚动,如果设定scrollbar: false,则屏蔽
+maxmin: true,
+content: 'goods_update.html'
+});
+});
+}
+</script>
+<script>
+    function update(xyz,sno) {
+     bku=F('gaddpage','stid='+xyz);
+      if (bku.length>10){
+        ptnhtxt=bku.split("[get-");
+        totpt=ptnhtxt.length;
+        for (f=1;f<totpt;f++){
+          tmpok=qian(ptnhtxt[f],"]");
+          eval("gvl=GetRequest()."+tmpok+";");
+          bku=bku.replace("[get-"+tmpok+"]",gvl); 
+        };
+        bku=bku.replace("[stid]",xyz); 
+        bku=bku.replace("[sno]",sno); 
+        bku=bku.replace("[appid]",GetRequest().appid); 
+           if (bku.indexOf("?")==-1){
+            bku=bku+"?rdr=1&rnd="+randomWord(false,10);
+           }else{
+            bku=bku+"&rdr=1&rnd="+randomWord(false,10);
+           }
+           bkurl=ajaxhtmlpost(bku,"");
+           if (bkurl.indexOf("location:")==0){
+             surl=bkurl.replace("location:","");
+           }else{
+             surl=bku;
+           }
+      }else{
+        if (xyz.length>10){
+           bku=xyz;
+            ptnhtxt=bku.split("[get-");
+            totpt=ptnhtxt.length;
+          for (f=1;f<totpt;f++){
+            tmpok=qian(ptnhtxt[f],"]");
+            eval("gvl=GetRequest()."+tmpok+";");
+            bku=bku.replace("[get-"+tmpok+"]",gvl); 
+          };
+          bku=bku.replace("[stid]",xyz); 
+          bku=bku.replace("[sno]",sno); 
+          bku=bku.replace("[appid]",GetRequest().appid); 
+           if (bku.indexOf("?")==-1){
+            bku=bku+"?rdr=1&rnd="+randomWord(false,10);
+           }else{
+            bku=bku+"&rdr=1&rnd="+randomWord(false,10);
+           }
+           bkurl=ajaxhtmlpost(bku,"");
+           if (bkurl.indexOf("location:")==0){
+             surl=bkurl.replace("location:","");
+           }else{
+             surl=bku;
+           }
+        }else{
+          surl='/SPEC/EDITOR/anyshortnew.php?stid='+xyz+'&SNO='+sno+'&cfid=newdftstyle&appid='+GetRequest().appid+'&rnd='+randomWord(false,10);
+        }
+     };
+   bkwhf= F('getstwh','stid='+xyz,''); 
+   whf=eval('('+bkwhf+')');
+   if (whf.status==1){
+     hx=whf.h;
+     wx=whf.w;
+       if (whf.f==1){
+         mx=false;
+       }else{
+         mx=true;
+       }
+   }else{
+     hx='600px';
+     wx='893px';
+     mx=true;
+   }
+     layer.open({
+      type: 2,
+      title: surl,
+      shadeClose: true,
+      shade: false,
+      maxmin: mx, //开启最大化最小化按钮
+      area: [wx, hx],
+      content: surl //这里content是一个URL,如果你不想让iframe出现滚动条,你还可以content: ['http://sentsin.com', 'no']
+     });
+    }
+function newwin(title,url) {     
+           bku=url;
+            ptnhtxt=bku.split("[get-");
+            totpt=ptnhtxt.length;
+          for (f=1;f<totpt;f++){
+            tmpok=qian(ptnhtxt[f],"]");
+            eval("gvl=GetRequest()."+tmpok+";");
+            bku=bku.replace("[get-"+tmpok+"]",gvl); 
+          };
+          bku=bku.replace("[stid]",qian(GetRequest().stid,"-")); 
+          bku=bku.replace("[appid]",GetRequest().appid); 
+           if (bku.indexOf("?")==-1){
+            bku=bku+"?rdr=1&rnd="+randomWord(false,10);
+           }else{
+            bku=bku+"&rdr=1&rnd="+randomWord(false,10);
+           }
+           bkurl=ajaxhtmlpost(bku,"");
+           if (bkurl.indexOf("location:")==0){
+             surl=bkurl.replace("location:","");
+           }else{
+             surl=bku;
+           }
+  if (surl.indexOf("stid=")>0){
+     xyz=qian(qian(hou(surl,"stid="),"&"),"-");
+  }else{
+     xyz=surl;
+  }
+   bkwhf= F('getstwh','stid='+xyz,''); 
+   whf=eval('('+bkwhf+')');
+   if (whf.status==1){
+     hx=whf.h;
+     wx=whf.w;
+       if (whf.f==1){
+         mx=false;
+       }else{
+         mx=true;
+       }
+   }else{
+     hx='600px';
+     wx='893px';
+     mx=true;
+   }
+     layer.open({
+      type: 2,
+      title: surl,
+      shadeClose: true,
+      shade: false,
+      maxmin: mx, //开启最大化最小化按钮
+      area: [wx, hx],
+      content: surl //这里content是一个URL,如果你不想让iframe出现滚动条,你还可以content: ['http://sentsin.com', 'no']
+     });
+    }
+</script>
+<script>
+function changesmt() {    
+    //动作：阻止表单数据提交
+  console.log("deny to send data.");
+    return false;
+}
+</script>
+<script>
+function intourl(turl){
+ var furl=window.location.href;
+ var dmn=window.location.host;
+ localStorage.setItem("preurl",furl) ;
+ localStorage.setItem("pretitle",document.title) ;
+ location.href=turl;
+}
+</script>
+<script>
+     tu=F('countpage','furl='+location.href+'&title='+document.title,'');
+     bku=F('gdiycode','stid='+qian(GetRequest().stid,"-"),'','');
+    if (tu=="Failure:relogin" || bku.indexOf(":relogin")>0){
+     var bk=ajaxhtmlpost('/DNA/EXF/verify.php','uid='+sessionStorage.uid+'&hashpa='+sessionStorage.pwd+'&gid='+sessionStorage.gid+'&datatype=text');
+     console.log(tu+"正在重新登录...结果为="+bk);
+     if (bk=="1"){
+       tu=F('countpage','furl='+location.href+'&title='+document.title,'');
+       bku=F('gdiycode','stid='+qian(GetRequest().stid,"-"),'','');
+     }else{
+      console.log(tu+"重新登录失败uid:"+sessionStorage.uid+"-pwd:"+sessionStorage.pwd+"-gid:"+sessionStorage.gid+".结果为="+bk);
+      preurl=location.href;
+      dmn=document.domain;
+      urlf=hou(preurl,dmn);
+      location.href='/SPEC/redblue/login.html?ufrom='+urlf;
+     }
+   }  
+     ptbku=bku.split(",");
+     totpt=ptbku.length;
+     fmt="";
+     fmu=""
+     var xmn='<div class="hoverBox"></div><ul style="vertical-align:middle"><li><a href="javascript:void(0)" onclick="frameRefresh()" onmouseenter="getTips(this, shuaxin())" onmouseleave="layer.closeAll(tips)"><i class="iconfont icon-shuaxin"></i></a></li>[newurl]</ul>';
+    lix='<li><a href="javascript:void(0)" style="margin-top:16px;" onclick="[clickx]"><font color="white">[title]</font></a></i>';
+    fmxx="";
+    for (i=0;i<totpt;i++){
+       bkt=qian(ptbku[i],":");
+       bku=hou(ptbku[i],":");
+       fmt=fmt+bkt+",";
+       fmu=fmu+bku+",";
+       pclick="menuCAClick('"+bku+"',this, 'page"+randomWord(false,6)+"')";
+       newlix=lix.replace('[clickx]',pclick);
+       newlix=newlix.replace('[title]',bkt);
+       fmxx=fmxx+newlix;
+    }
+if (fmu.length>2){
+ localStorage.setItem("oriurl",fmu) ;
+ localStorage.setItem("preurl",fmu) ;
+ localStorage.setItem("orititle",fmt) ;
+ localStorage.setItem("pretitle",fmt) ;
+}
+// xhtm=xmn.replace('[newurl]',fmxx);
+ localStorage.setItem("myvisit",location.href) ;
+//console.log("set my visit ="+location.href)
+ localStorage.setItem("myvtitle",document.title) ;
+  //$("#oldclick").html(xhtm);
+//console.log("set my vtitle ="+document.title)
+//console.log("myvisit="+localStorage.getItem("myvisit"))
+//console.log("myvtitle="+localStorage.getItem("myvtitle"))
+</script>
+<script>
+ function deliv(stid){
+ purl=location.href;
+ window.open('/DNA/EXF/anyfun.php?fid=printpage&xurl='+purl);
+}
+</script>
+<script>
+function toxx(){
+ $('.innerUl>ul>li>ul').hide();$('li:has(ul)>i').attr('ischek','false');$('li:has(ul)>i').removeClass('fa-folder-open-o');$('li:has(ul)>i').addClass('fa-folder-o');
+}
+function diyi(){
+$("#d1").show();
+$("#d2").hide();
+$("#d3").hide();
+$("#d4").hide();
+$("#d5").hide();
+$("#d6").hide();
+}
+function dier(){
+$("#d1").hide();
+$("#d2").show();
+$("#d3").hide();
+$("#d4").hide();
+$("#d5").hide();
+$("#d6").hide();
+}
+function disan(){
+$("#d1").hide();
+$("#d2").hide();
+$("#d3").show();
+$("#d4").hide();
+$("#d5").hide();
+$("#d6").hide();
+}
+function disi(){
+$("#d1").hide();
+$("#d2").hide();
+$("#d3").hide();
+$("#d4").show();
+$("#d5").hide();
+$("#d6").hide();
+}
+function diwu(){
+$("#d1").hide();
+$("#d2").hide();
+$("#d3").hide();
+$("#d4").hide();
+$("#d5").show();
+$("#d6").hide();
+}
+function diliu(){
+$("#d1").hide();
+$("#d2").hide();
+$("#d3").hide();
+$("#d4").hide();
+$("#d5").hide();
+$("#d6").show();
+}
+</script>
+<script>
+function supersearch(sid,nox){
+ allk=$("#supers").attr("skey");
+ ptk=allk.split("/");
+ totk=ptk.length;
+ fmkv="";
+ for (t=0;t<totk-1;t++){
+  tmpk=qian(ptk[t],":");
+  tmtp=hou(ptk[t],":");
+   switch (tmtp){
+   case "varchar":
+    for (p=1;p<7;p++){
+      fmkv=fmkv+"q_"+tmpk+p+":"+$("#q_"+tmpk+p).val()+"/";
+    }
+   break;
+   case "text":
+    for (p=1;p<7;p++){
+      fmkv=fmkv+"q_"+tmpk+p+":"+$("#q_"+tmpk+p).val()+"/";
+    }
+   break;
+   default:
+     for (p=1;p<7;p++){
+      fmkv=fmkv+"qa_"+tmpk+p+":"+$("#qa_"+tmpk+p).val()+"/"+"qb_"+tmpk+p+":"+$("#qb_"+tmpk+p).val()+"/";
+    }
+ }//switch
+ }//for t
+ stid=GetRequest().stid;
+ location.href="/SPEC/EDITOR/anyjsshort.php?stid="+stid+"&xkey="+allk+"&xval="+fmkv;
+}
+</script>
+<script>
+function totb(){
+ tbnm=$("#tbnm").attr("tbnm");
+ newwin("编辑"+tbnm+"表格","/SPEC/EDITOR/anyjsshort.php?stid=2qPIqS-sfile:anyjsshort.php-&pnum=30:"+tbnm+"&page=1:TABLE_NAME");
+}
+function uptb(){
+ stid=GetRequest().stid;
+ if (stid.indexOf("-")>0){
+  stid=qian(stid,"-");
+ }
+ newwin("编辑短数据表格"+stid,"/SPEC/EDITOR/anyjsshort.php?datatype=html&stid=keydtly-sfile:anyjsshort.php-&pnum=30:"+stid+"&page=1:shortid");
+}
+function topmt(){
+ appid=GetRequest().appid;
+ newwin("编辑此应用相关用户权限"+appid,"/SPEC/EDITOR/anyjsshort.php?stid=pmissps-sfile:anyjsshort.php-pnum:30-&page=1:appid&pnum=30:"+appid);
+}
+function tofun(){
+ appid=GetRequest().appid;
+ bkfun=F('getfunbyappid','appid='+appid,'');
+ newwin("编辑此应用涉及方法-"+appid,"/SPEC/EDITOR/anyjsshort.php?stid=appfuns-sfile:anyjsshort.php-pnum:30-&funs="+bkfun);
+}
+</script>
+<script>
+hidesc();
+function hidesc(){
+ tbnmx=document.getElementsByName("anytable");
+ tottb=tbnmx.length;
+ for (i=0;i<tottb;i++){
+ tmptb=$(tbnmx[i]).attr("tbname");
+   if ($("#scol"+tmptb).css("width")>=$("#anytable"+tmptb).css("width")){
+     $("#scol"+tmptb).css("overflow-x","hidden");
+   }
+ }
+}
+function showsc(){
+tbnmx=document.getElementsByName("anytable");
+tottb=tbnmx.length;
+for (i=0;i<tottb;i++){
+tmptb=$(tbnmx[i]).attr("tbname");
+   if ($("#scol"+tmptb).css("width")<$("#anytable"+tmptb).css("width")){
+     $("#scol"+tmptb).css("overflow-x","scroll");
+   }
+}
+}
+</script>
+<script>
+function downv(){
+purl=location.href;
+bkx=F('downpage','xurl='+purl);
+xzhtml="<a href=\""+bkx+"\"  class=\"layui-btn\" >点我下载↓</a>";
+$("#xzdz").html(xzhtml);
+}
+function quanxuan(){
+  var chk = document.getElementsByTagName("input");
+  for (var i = 0; i < chk.length; i++) {  
+    chk[i].checked = true;
+  }
+//$(".layui-form-checkbox").addClass("layui-unselect");
+$(".layui-form-checkbox").addClass("layui-form-checked");  
+}
+function changeb(){
+iup=$("#isupdate").val();
+if ((iup*1)==0){
+ $("#isu").html("<img src=\"/ORG/BRAIN/images/icon/system/xg1.svg\" style=\"width:20px;height:20px;\">");
+ $("#isupdate").val(1);
+}else{
+ $("#isu").html("<img src=\"/ORG/BRAIN/images/icon/system/xg0.svg\" style=\"width:20px;height:20px;\">");
+ $("#isupdate").val(0);
+}
+}
+</script>
+<script>
+function hidedd(){
+        var xx=$("dd");
+        totdd=xx.length;
+        for (k=0;k<totdd;k++){
+         tmpvvv=$(xx[k]).attr("lay-value");
+         if (tmpvvv.indexOf("--")>0){
+          $(xx[k]).parent().parent().hide();
+         };
+        };
+   stid=GetRequest().stid;
+   sid=qian(stid,"-");
+   umk=$("#"+sid+"update").attr("urlmark");
+    if (umk!=""){
+       tbnm=qian(hou(umk,"--"),"@");
+        if (tbnm!=""){
+          fmk="";
+          $("input:checkbox[name='chksno']").each(function(i){
+            var val = $(this).val();
+            fmk = fmk + val + ','; }
+            );
+           x=ajaxhtmlpost('/DNA/EXF/anyfun.php?fid=phptohtml&urlmark='+umk+'&snos='+fmk+'&tbnm='+tbnm+'&sid='+sid+'&pnum='+GetRequest().pnum+'&page='+GetRequest().page,'phtml='+mkstr(document.getElementsByTagName('html')[0].innerHTML));
+        }
+    }
+}
+setTimeout(hidedd,3000);
+ if (localStorage.getItem("edittable")=="1"){
+   $("#aside-nav").show();
+ }else{
+   $("#aside-nav").hide();
+ }
+</script>
+<script>
+ $('td').click(function (){
+    var isup=$('#isupdate').prop('checked');
+    var isuv=$('#isupdate').val();
+  if (isup==true || (isuv*1)==1){
+    var snoid=$(this).attr('snoid');
+    var knmid=$(this).attr('knm');
+    var tiptid=knmid+snoid;
+    var tiptidx="p_"+knmid+snoid;
+    var oldvl=$('#'+tiptid).html();
+    var olddtvl=hex2a($(this).attr('tdata'));
+    var olddtvl=hhth(olddtvl);
+     var iptsize=$('#'+tiptid).html().length;
+     var kntp=$(this).attr('tpnm');
+  atb=document.getElementsByName("anytable");
+  tota=atb.length;
+ allck="";
+  for (m=0;m<tota;m++){
+  allck=allck+$(atb[m]).attr("cantkies")+",";
+  }
+  var cks="xy-"+allck;
+console.log('cks--'+cks);
+  var knmx=$(this).attr("knm");
+       if (iptsize==0 || iptsize>10){iptsize=15};
+      if (oldvl.indexOf('<input')<=-1 && oldvl.indexOf('<textarea')<=-1 && oldvl.indexOf('<select')<=-1 && cks.indexOf(knmx)<=-1){
+        if (kntp=='text' || kntp=='longtext'){
+          inhtml='{textarea id="'+tiptidx+'" rows=3 cols=50 }'+olddtvl+'{/textarea}';
+          inhtml=inhtml.replace(/{/g,'<');
+          inhtml=inhtml.replace(/}/g,'>');
+          $('#'+tiptid).html(inhtml);
+        }else{
+          inhtml= '{textarea id="'+tiptidx+'" rows=2 cols=33 }'+olddtvl+'{/textarea}';
+          inhtml=inhtml.replace(/{/g,'<');
+          inhtml=inhtml.replace(/}/g,'>');
+          $('#'+tiptid).html(inhtml);
+       };
+   };
+   showsc();
+  }else{
+  };
+ }
+);
+function plsc(surl,tbnm){
+Notiflix.Confirm.Show( '批量删除确认','你确定要删除这些条记录吗?', '是', '否', function(){scxz(surl,tbnm);});
+}
+function scxz(surl,tbnm){
+var fmk='';
+$("input:checkbox[name='chksno']:checked").each(function(i){
+var val = $(this).val();
+fmk = fmk + val + ','; }
+);
+qajaxps('批量删除','http://'+surl+'/DNA/EXF/anyrcv.php?tbnm='+tbnm+'&kies=-killitem&SNO='+fmk,'');
+}
+</script>
+<script type="text/javascript">
+    $(function(){
+        $(".nav>li").hover(function(){
+            $(this).children('ul').stop(true,true).show(300);
+        },function(){
+            $(this).children('ul').stop(true,true).hide(300);
+        })
+    })
+</script>
+
+
+</body>
+</html>

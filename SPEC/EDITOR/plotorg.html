@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>鸿蓝大总管</title>
+  <link rel="stylesheet" href="/FACE/boostree/css/bootstrapStyle/bootstrapStyle.css">
+
+<script type="text/javascript" src="/DNA/EXF/sysbase/sysjs.js"></script>
+<script type="text/javascript" src="/DNA/EXF/sysbase/jquery.min.js"></script>
+<script type="text/javascript" src="/DNA/EXF/sysbase/message.js"></script>
+<link rel="stylesheet" href="/DNA/EXF/sysbase/bootstrap.css">
+<link rel="stylesheet" href="/DNA/EXF/sysbase/message.css">
+<script type="text/javascript" src="/FACE/boostree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="/FACE/boostree/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/FACE/boostree/js/jquery.ztree.exedit.js"></script>
+
+         <style>
+
+
+
+.orgsetbutton{
+width: 200px;
+padding:8px;
+background-color: #428bca;
+border-color: #357ebd;
+color: #fff;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px; /* future proofing */
+-khtml-border-radius: 10px; /* for old Konqueror browsers */
+text-align: center;
+vertical-align: middle;
+border: 1px solid transparent;
+font-weight: 900;
+font-size:125%
+}
+
+
+</style>
+</head>
+<body><div style="padding-left:20%"><span id="treetitle"><h1>节点结构设置</h1></span>
+<div ><input id="plotid" type="hidden" value="mother"></div>
+<ul id="treeDemo" class="ztree"></ul>
+<div style="margin-top:20%"><button class="orgsetbutton" onclick="saveorg()">保存节点结构</button></body>
+ </div>
+
+  <SCRIPT type="text/javascript">
+
+        var setting = {
+            view: {
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                selectedMulti: false
+            },
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            edit: {
+                enable: true
+            }
+        };
+       bkdata=ajaxhtmlpost("/DNA/EXF/showplot.php?plid="+GetRequest().plid,"");
+        var zNodes =eval('('+bkdata+')');
+       
+       $("#plotid").val(GetRequest().tarmk);
+        $(document).ready(function(){
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        });
+
+        var newCount = 1;
+        function addHoverDom(treeId, treeNode) {
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                + "' title='add node' onfocus='this.blur();'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_"+treeNode.tId);
+            if (btn) btn.bind("click", function(){
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+                return false;
+            });
+        };
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_"+treeNode.tId).unbind().remove();
+        };
+
+    </SCRIPT>
+<script>
+
+function saveorg(){
+
+ var allli=$('li');
+ var fmtxt='';
+ for (var i=0;i<allli.length;i++){
+   lvcls=$(allli[i]).attr('class');
+   fmtxt=fmtxt+$(allli[i]).children('a').attr('target')+","+$(allli[i]).children('a').attr('title')+","+$(allli[i]).attr('id')+","+$(allli[i]).parent().attr('id')+","+lvcls.replace("level","")+";";
+ };
+  var domain = document.domain;
+ x=ajaxhtmlpost("//"+domain+"/DNA/EXF/rcvplot.php?plid="+GetRequest().plid,'plrst='+fmtxt);
+ if (x==1){
+  alert("保存成功");
+ }else{
+  alert("保存失败");
+ };
+
+}
+</script>
+
+
+</html>
