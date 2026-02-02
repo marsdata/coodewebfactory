@@ -13,7 +13,7 @@
    if ($fromhost==""){
       include '../../localxres/EARTH.php';
    }else{
-      include '/localxres/EARTH.php'; 
+      include 'localxres/EARTH.php'; 
       if (strpos($fromhost,":")>0){
        $dkh=hou($fromhost,":");
       }else{
