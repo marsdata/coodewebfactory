@@ -1,0 +1,813 @@
+<?php
+ header('Content-Type:text/html;charset=utf-8');
+ header("Access-Control-Allow-Origin:*");
+ header("Access-Control-Allow-Headers:content-type");
+ header("Access-Control-Request-Method:GET,POST");
+ if(strtoupper($_SERVER['REQUEST_METHOD'])== 'OPTIONS'){
+  exit;
+ }
+      error_reporting(0);
+      register_shutdown_function('zyfshutdownfunc'); 
+      set_error_handler('zyferror'); 
+   $fromhost=$_GET["fromhost"];   
+   if ($fromhost==""){
+      include '../../localxres/EARTH.php';
+   }else{
+      include '/localxres/EARTH.php'; 
+      if (strpos($fromhost,":")>0){
+       $dkh=hou($fromhost,":");
+      }else{
+       $dkh="";
+      }
+     if ($dkh=="443"){
+       $reshost="https://".qian($fromhost,":");
+      }else{
+       $reshost="http://".$fromhost;
+      }
+  
+   }
+   $restype=$_GET["restype"];
+   $rescode=$_GET["rescode"];
+   $sysid=$_GET["sysid"];
+   $vermd5=$_GET["vermd5"];
+function tabmake($tabnm){
+  $conn=mysql_connect(gl(),glu(),glp());
+  $trst=selecteds($conn,"information_schema","select TABLE_CATALOG,TABLE_SCHEMA,TABLE_NAME,COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH,CHARACTER_OCTET_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,CHARACTER_SET_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY,EXTRA,PRIVILEGES,COLUMN_COMMENT from COLUMNS where TABLE_SCHEMA='".glb()."' and TABLE_NAME='".$tabnm."'","utf8","");
+  $totrst=countresult($trst);
+  $btree=betrees($tabnm);
+  $fmc="";
+  $tbdk="X/CRTM/UPTM/CRTOR/STATUS/OLMK/VRT/STCODE/PTOF/PRIME/RIP/SNO/OPRT/";
+  if ($tabnm=="coode_keydetailx" or $tabnm=="coode_keydetaily"){
+     $expk="X/ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,CHARACTER_OCTET_LENGTH,NUMERIC_PRECISION,NUMERIC_SCALE,DATETIME_PRECISION,CHARACTER_SET_NAME,COLLATION_NAME,COLUMN_TYPE,COLUMN_KEY,EXTRA,PRIVILEGES,COLUMN_COMMENT";
+  }else{
+     $expk="";
+  }
+  for ($k=0;$k<$totrst;$k++){
+   $sTABLE_CATALOG[$k]=anyvalue($trst,"TABLE_CATALOG",$k);
+   $sTABLE_SCHEMA[$k]=anyvalue($trst,"TABLE_SCHEMA",$k);
+   $sTABLE_NAME[$k]=anyvalue($trst,"TABLE_NAME",$k);
+   $sCOLUMN_NAME[$k]=anyvalue($trst,"COLUMN_NAME",$k);
+   $sORDINAL_POSITION[$k]=anyvalue($trst,"ORDINAL_POSITION",$k);
+   $sCOLUMN_DEFAULT[$k]=anyvalue($trst,"COLUMN_DEFAULT",$k);
+   $sIS_NULLABLE[$k]=anyvalue($trst,"IS_NULLABLE",$k);
+   $sDATA_TYPE[$k]=anyvalue($trst,"DATA_TYPE",$k);
+   $sCHARACTER_MAXIMUM_LENGTH[$k]=anyvalue($trst,"CHARACTER_MAXIMUM_LENGTH",$k);
+   $sCHARACTER_OCTET_LENGTH[$k]=anyvalue($trst,"CHARACTER_OCTET_LENGTH",$k);
+   $sNUMERIC_PRECISION[$k]=anyvalue($trst,"NUMERIC_PRECISION",$k);
+   $sNUMERIC_SCALE[$k]=anyvalue($trst,"NUMERIC_SCALE",$k);
+   $sCHARACTER_SET_NAME[$k]=anyvalue($trst,"CHARACTER_SET_NAME",$k);
+   $sCOLLATION_NAME[$k]=anyvalue($trst,"COLLATION_NAME",$k);
+   $sCOLUMN_TYPE[$k]=anyvalue($trst,"COLUMN_TYPE",$k);
+   $sCOLUMN_KEY[$k]=anyvalue($trst,"COLUMN_KEY",$k);
+   $sEXTRA[$k]=anyvalue($trst,"EXTRA",$k);
+   $sPRIVILEGES[$k]=anyvalue($trst,"PRIVILEGES",$k);
+   $sCOLUMN_COMMENT[$k]=anyvalue($trst,"COLUMN_COMMENT",$k);
+   $somark[$k]=date('Ymdhis').getRandChar(6);
+   switch($sDATA_TYPE[$k]){
+    case "int":
+    if ($sCOLUMN_NAME[$k]=="SNO"){
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." int(11) NOT NULL AUTO_INCREMENT,";
+    }else{
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." int(11) NOT NULL,";
+    }
+    break;
+    case "bigint":
+    if ($sCOLUMN_NAME[$k]=="SNO"){
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." bigint(20) NOT NULL AUTO_INCREMENT,";
+    }else{
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." bigint(20) NOT NULL,";
+    }
+    break;
+    case "tinyint":
+    if ($sCOLUMN_NAME[$k]=="SNO"){
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." tinyint(4) NOT NULL AUTO_INCREMENT,";
+    }else{
+      $fmc=$fmc.$sCOLUMN_NAME[$k]." tinyint(4) NOT NULL,";
+    }
+    break;
+    case "decimal":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." decimal(10,2) NOT NULL,";
+    break;
+    case "varchar":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." varchar(".$sCHARACTER_MAXIMUM_LENGTH[$k].") NOT NULL,";
+    break;
+    case "text":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." text NOT NULL,";
+    break;
+    case "longtext":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." longtext NOT NULL,";
+    break;
+    case "date":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." date NOT NULL,";
+    break;
+    case "datetime":
+    $fmc=$fmc.$sCOLUMN_NAME[$k]." datetime NOT NULL,";
+    break;    
+    default:
+   } 
+ }
+ $fmc=$fmc."PRIMARY KEY (SNO),";
+ if ($btree==""){
+   $fmc=killlaststr($fmc);
+ }else{
+   $fmc=$fmc.$btree;
+ } 
+ $crtsql="CREATE TABLE ".$tabnm." (".$fmc.") ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;";
+ return $crtsql;
+}
+function tabalter($oldSql, $newSql){
+    // 解析老表和新表的结构（纯字符串解析，无正则）
+    $oldTable = parseCreateTableSql($oldSql);
+    $newTable = parseCreateTableSql($newSql);
+    // 校验表名是否一致（修改不同表无意义）
+    if ($oldTable['tableName'] !== $newTable['tableName']) {
+        throw new Exception("老表【{$oldTable['tableName']}】和新表【{$newTable['tableName']}】表名不一致，无法修改");
+    }
+    $tableName = $oldTable['tableName'];
+    // 初始化操作列表
+    $alterOperations = [];
+    // 1. 处理【修改字段】：字段名存在但定义不同
+    foreach ($newTable['fields'] as $fieldName => $newFieldDef) {
+        if (isset($oldTable['fields'][$fieldName])) {
+            $oldFieldDef = $oldTable['fields'][$fieldName];
+            // 去除两端空格后对比（避免空格差异导致误判）
+            if (trim($newFieldDef) !== trim($oldFieldDef)) {
+                $alterOperations[] = "MODIFY COLUMN `{$fieldName}` {$newFieldDef}";
+            }
+        }
+    }
+    // 2. 处理【新增字段】：新表有、老表无
+    $addFields = array_diff_key($newTable['fields'], $oldTable['fields']);
+    foreach ($addFields as $fieldName => $fieldDef) {
+        $alterOperations[] = "ADD COLUMN `{$fieldName}` {$fieldDef}";
+    }
+    // 3. 处理【删除字段】：老表有、新表无
+    $dropFields = array_diff_key($oldTable['fields'], $newTable['fields']);
+    foreach ($dropFields as $fieldName => $_) {
+        $alterOperations[] = "DROP COLUMN `{$fieldName}`";
+    }
+    // 无修改则返回空字符串
+    if (empty($alterOperations)) {
+        return 'nokey';
+    }
+    // 拼接最终ALTER语句（单条语句合并多个操作，效率更高）
+    $alterSql = "ALTER TABLE `{$tableName}` " . implode(', ', $alterOperations) . ';';
+    return $alterSql;
+}
+/**
+ * 纯字符串方式解析CREATE TABLE语句，提取表名和字段定义（无任何正则）
+ * @param string $sql CREATE TABLE语句
+ * @return array ['tableName' => 表名, 'fields' => [字段名=>字段完整定义]]
+ * @throws Exception 解析失败抛出异常
+ */
+function parseCreateTableSql(string $sql): array
+{
+    // 预处理：移除所有换行、制表符，替换多个空格为单个（纯字符串实现，无正则）
+    $sql = str_replace(["\n", "\r", "\t"], ' ', $sql);
+    // 循环替换多个空格为单个，替代preg_replace('/\s+/', ' ', $sql)
+    while (strpos($sql, '  ') !== false) {
+        $sql = str_replace('  ', ' ', $sql);
+    }
+    $sql = trim($sql);
+    $sqlUpper = strtoupper($sql);
+    // ------------------- 步骤1：提取表名 -------------------
+    // 定位 CREATE TABLE 后的表名（到第一个左括号为止）
+    $createTableStr = 'CREATE TABLE ';
+    $createTablePos = strpos($sqlUpper, $createTableStr);
+    if ($createTablePos === false) {
+        throw new Exception("不是有效的CREATE TABLE语句：{$sql}");
+    }
+    $tableNameStart = $createTablePos + strlen($createTableStr);
+    $leftBracketPos = strpos($sql, '(', $tableNameStart);
+    if ($leftBracketPos === false) {
+        throw new Exception("未找到表结构的左括号，SQL格式错误：{$sql}");
+    }
+    // 截取表名部分并清理（去掉反引号、多余空格）
+    $tableName = trim(substr($sql, $tableNameStart, $leftBracketPos - $tableNameStart));
+    $tableName = str_replace('`', '', $tableName);
+    if (empty($tableName)) {
+        throw new Exception("无法解析出表名，SQL格式错误：{$sql}");
+    }
+    // ------------------- 步骤2：提取括号内的字段/约束内容 -------------------
+    $rightBracketPos = strrpos($sql, ')'); // 找最后一个右括号（避免括号嵌套）
+    if ($rightBracketPos === false || $rightBracketPos < $leftBracketPos) {
+        throw new Exception("未找到表结构的右括号，SQL格式错误：{$sql}");
+    }
+    $bracketContent = trim(substr($sql, $leftBracketPos + 1, $rightBracketPos - $leftBracketPos - 1));
+    if (empty($bracketContent)) {
+        throw new Exception("表结构括号内无内容，SQL格式错误：{$sql}");
+    }
+    // ------------------- 步骤3：拆分内容为行，过滤约束，提取字段 -------------------
+    $fields = [];
+    // 按逗号拆分（仅拆分不在括号内的逗号，避免字段类型如decimal(10,2)内的逗号干扰）
+    $lines = splitByCommaOutsideBrackets($bracketContent);
+    
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (empty($line)) {
+            continue;
+        }
+        $lineUpper = strtoupper($line);
+        // 过滤约束行（主键、唯一键、索引、约束等）
+        $skipKeywords = ['PRIMARY KEY', 'UNIQUE KEY', 'KEY ', 'CONSTRAINT', 'INDEX '];
+        $isConstraint = false;
+        foreach ($skipKeywords as $keyword) {
+            if (strpos($lineUpper, $keyword) === 0) {
+                $isConstraint = true;
+                break;
+            }
+        }
+        if ($isConstraint) {
+            continue;
+        }
+        // ------------------- 提取字段名和字段定义 -------------------
+        // 找到第一个空格的位置（字段名和属性的分隔）
+        $firstSpacePos = strpos($line, ' ');
+        if ($firstSpacePos === false) {
+            continue; // 无效的字段行（无属性定义）
+        }
+        // 提取字段名（去掉反引号）
+        $fieldName = trim(substr($line, 0, $firstSpacePos));
+        $fieldName = str_replace('`', '', $fieldName);
+        // 过滤无效字段名（不能以数字开头、不能为空）→ 纯字符串判断，替代preg_match
+        if (empty($fieldName) || isStartWithNumber($fieldName)) {
+            continue;
+        }
+        // 提取字段完整属性定义
+        $fieldDef = trim(substr($line, $firstSpacePos));
+        $fields[$fieldName] = $fieldDef;
+    }
+    if (empty($fields)) {
+        throw new Exception("未解析到任何字段，SQL格式错误：{$sql}");
+    }
+    return [
+        'tableName' => $tableName,
+        'fields' => $fields
+    ];
+}
+/**
+ * 纯字符串判断：字符串是否以数字开头（替代preg_match('/'[0-9]/', $str)）
+ * @param string $str 待判断字符串
+ * @return bool true=以数字开头，false=否
+ */
+function isStartWithNumber(string $str): bool
+{
+    if (empty($str)) {
+        return false;
+    }
+    $firstChar = $str[0];
+    // 判断第一个字符是否是0-9
+    return $firstChar >= '0' && $firstChar <= '9';
+}
+/**
+ * 按括号外的逗号拆分字符串（解决decimal(10,2)等字段内逗号的问题）
+ * @param string $str 待拆分的字符串
+ * @return array 拆分后的行数组
+ */
+function splitByCommaOutsideBrackets(string $str): array
+{
+    $result = [];
+    $current = '';
+    $bracketCount = 0; // 括号嵌套计数
+    for ($i = 0; $i < strlen($str); $i++) {
+        $char = $str[$i];
+        if ($char === '(') {
+            $bracketCount++;
+        } elseif ($char === ')') {
+            $bracketCount--;
+            if ($bracketCount < 0) {
+                $bracketCount = 0; // 容错：括号不匹配时重置
+            }
+        } elseif ($char === ',' && $bracketCount === 0) {
+            // 仅当括号计数为0时，按逗号拆分
+            $result[] = $current;
+            $current = '';
+            continue;
+        }
+        $current .= $char;
+    }
+    // 加入最后一段内容
+    if (!empty(trim($current))) {
+        $result[] = $current;
+    }
+    return $result;
+}
+function RD($dmark){
+$datamark=$dmark;
+$dkrst=SX("select datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib  from coode_dspckey where datamark='".$datamark."' order by sqx");
+  $totdk=countresult($dkrst);
+  $fmtps="";
+  $fmrcd="datasno,";
+  $fmca="";
+  $fmcb="";
+  $clstxt="";
+  for ($i=0;$i<$totdk;$i++){
+  $keyx[$i]=anyvalue($dkrst,"keymark",$i);
+  $keyy[$i]=anyvalue($dkrst,"keytitle",$i);
+  $keytp[$i]=anyvalue($dkrst,"keytype",$i);
+  $keylen[$i]=anyvalue($dkrst,"keylen",$i);
+  $clstxtx[$i]=anyvalue($dkrst,"clstxt",$i);
+  $classp[$i]=anyvalue($dkrst,"classp",$i);
+  $keydxtype[$i]=anyvalue($dkrst,"dxtype",$i);
+  $fmtps=$fmtps.'{"keyid":"'.$keyx[$i].'","keytitle":"'.$keyy[$i].'","keytype":"'.$keytp[$i].'","keylen":"'.$keylen[$i].'"},';
+  $fmrcd=$fmrcd.$keyx[$i].",";
+  }//totdk
+  $fmtps=killlaststr($fmtps);
+  $fmrcd=killlaststr($fmrcd)."@/@";
+  $fmrcd=str_replace(",","@-@",$fmrcd);
+  $jsondata='{"data":[<datavls>]}';
+  $datademo='{"status":"1","datamark":"<datamark>","datatitle":"<datatitle>","totrcd":"<totrcd>","keytps":[<ktps>],"vls":[<datavls>]}';
+  $datatitle=UX("select datatitle as result from coode_dataspace where datamark='".$datamark."'");
+  $datarst=SX("select datasno,keymks,valmd5,keyvals from coode_dspcvindex where datamark='".$datamark."'");
+  $totda=countresult($datarst);
+  $datademo=str_replace("<datamark>",$datamark,$datademo);
+  $datademo=str_replace("<datatitle>",$datatitle,$datademo);
+  $datademo=str_replace("<ktps>",$fmtps,$datademo);
+  $datademo=str_replace("<totrcd>",$totda,$datademo);
+  $fmvalx="";
+ 
+  for ($j=0;$j<$totda;$j++){
+  $datasno=anyvalue($datarst,"datasno",$j);
+  $keymks=anyvalue($datarst,"keymks",$j);
+  $valmd5=anyvalue($datarst,"valmd5",$j);
+  $keyvals=anyvalue($datarst,"keyvals",$j);
+  $rcdrowx="";
+  $fmitem="{";
+  if ($keyvals!=""){
+  $ptkey=explode(",",$keymks);  
+  $ptval=explode("@-@",$keyvals);  
+  for ($k=0;$k<count($ptkey);$k++){
+   $valx[$ptkey[$k]]=$ptval[$k];    
+   $rcdrowx=$rcdrowx.$ptval[$k].",";
+   if ($classp[$k]==1){
+   $fmca=$fmca.$ptval[$k].",";
+   }
+   if ($classp[$k]==2){
+   $fmcb=$fmcb.$ptval[$k].",";
+   }
+  }//fork
+   $fmrcd=$fmrcd.$datasno.",".$rcdrowx;
+   $fmrcd=killlaststr($fmrcd).";";
+  }else{
+  $detailrst=SX("select keymark,keytype,intval,tinyintval,dateval,datetimeval,varcharval,textval,longtextval,decimalval,classp from coode_dspcval where datamark='".$datamark."' and datasno='".$datasno."'");
+  $totdtl=countresult($detailrst);   
+  for ($k=0;$k<$totdtl;$k++){
+   $kmk=anyvalue($detailrst,"keymark",$k);
+   $ktp=anyvalue($detailrst,"keytype",$k);
+   $classpx=anyvalue($detailrst,"classp",$k);
+   $intval=anyvalue($detailrst,"intval",$k);
+   $tinyintval=anyvalue($detailrst,"tinyintval",$k);
+   $dateval=anyvalue($detailrst,"dateval",$k);
+   $datetimeval=anyvalue($detailrst,"datetimeval",$k);
+   $varcharval=anyvalue($detailrst,"varcharval",$k);
+   $textval=anyvalue($detailrst,"textval",$k);
+   $longtextval=anyvalue($detailrst,"longtextval",$k);
+   $decimalval=anyvalue($detailrst,"decimalval",$k);
+   switch($ktp){
+    case "int":
+    $valx[$kmk]=$intval;
+    break;
+    case "tinyint":
+    $valx[$kmk]=$tinyintval;
+    break;
+    case "dateval":
+    $valx[$kmk]=$dateval;
+    break;
+    case "datetimeval":
+    $valx[$kmk]=$datetimeval;
+    break;
+    case "varcharval":
+    $valx[$kmk]=$varcharval;
+    break;
+    case "textval":
+    $valx[$kmk]=$textval;
+    break;
+    case "longtextval":
+    $valx[$kmk]=$longtextval;
+    break;
+    case "decimalval":
+    $valx[$kmk]=$decimalval;
+    break;
+    default:
+   }//swc
+   $rcdrowx=$rcdrowx.$valx[$kmk].",";   
+   if (intval($classpx)==1){
+    $fmca=$fmca.$valx[$kmk].",";
+   }
+   if (intval($classpx)==2){
+    $fmcb=$fmcb.$valx[$kmk].",";
+   }
+  }//fork  
+  $fmrcd=$fmrcd.$datasno.",".$rcdrowx;
+  $fmrcd=killlaststr($fmrcd).";";  
+  }//ifkeyval
+  
+  for ($i=0;$i<$totdk;$i++){
+   $fmitem=$fmitem.'"'.$keyx[$i].'":"'.$valx[$keyx[$i]].'",';
+  }
+  $fmitem=killlaststr($fmitem).'}';
+  $fmvalx=$fmvalx.$fmitem.',';
+  }//forj
+  $fmvalx=killlaststr($fmvalx);
+  $fmca=killlaststr($fmca);
+  $fmcb=killlaststr($fmcb);
+  if ($fmca!="" and $fmcb!=""){
+  $clstxt=$fmcb."|".$fmca;
+  }
+ 
+  $fmrcd=str_replace(",","@-@",$fmrcd);
+  $fmrcd=str_replace(";","@/@",$fmrcd);
+  
+  $datademo=str_replace("<datavls>",$fmvalx,$datademo);
+  $jsondata=str_replace("<datavls>",$fmvalx,$jsondata);
+  
+  $jshortpath=combineurl(localroot(),"/localxres/dataspacex/".$datamark."/jsshort.json");
+  $jsonpath=combineurl(localroot(),"/localxres/dataspacex/".$datamark."/data.json");
+  $coodex=combineurl(localroot(),"/localxres/dataspacex/".$datamark."/coodercd.txt");
+  $coodeclstxt=combineurl(localroot(),"/localxres/dataspacex/".$datamark."/coodeclstxt.txt");
+  $z0=overfile($jshortpath,$datademo);
+  $z1=overfile($jsonpath,$jsondata);
+  $newrcd=str_replace("@-@","#"."-#",str_replace("@/@","#"."/#",$fmrcd));
+  $z2=overfile($coodex,$newrcd);
+  $z3=overfile($coodeclstxt,$clstxt);
+  return true;
+}
+function ND($dmark,$pvstr){
+ if (es($dmark)*es($pvstr)==1){
+ $lastsno=UX("select datasno as result from coode_dspcvindex where datamark='".$dmark."' order by datasno desc");
+ $newsno=intval($lastsno)+1;
+ $kval=array();
+  if (strpos($pvstr,"&")>0){
+  $ptv=explode("&",$pvstr);
+  $totptv=count($ptv);
+  for ($mm=0;$mm<$totptv;$mm++){
+   $temppart=$ptv[$mm];
+   $tempkey=qian($ptv[$mm],"=");
+   $tempval=unstrs(hou($ptv[$mm],"="));
+   $kval[$tempkey]=dftval($tempval,unstrs($_POST[$tempkey]));   
+  }
+  $tt=UX("insert into coode_dspcval(datamark,datasno,keymark,keytitle,keytype,keylen,CRTM,UPTM,OLMK)select datamark,'".($newsno)."',keymark,keytitle,keytype,keylen,now(),now(),RAND()*1000000 from coode_dspckey where datamark='".$dmark."'");
+  $dskrst=SX("select keymark,keytype,keytitle from coode_dspckey where datamark='".$dmark."'");
+  $totds=countresult($dskrst);
+  $fmk="";
+  $fmv="";
+  for ($oo=0;$oo<$totds;$oo++){
+   $kmk=anyvalue($dskrst,"keymark",$oo);
+   $ktp=anyvalue($dskrst,"keytype",$oo);
+   $fmk=$fmk.$kmk.",";
+   $fmv=$fmv.$kval[$kmk]."@-@";
+   $kxx=$ktp."val";
+   $dx=UX("update coode_dspcval set ".$kxx."='".$kval[$kmk]."',UPTM=now() where datamark='".$dmark."' and datasno='".($newsno)."' and keymark='".$kmk."'");  
+  }
+  $fmk=killlaststr($fmk);
+  $fmv=killlaststr($fmv);
+  $fmv=killlaststr($fmv);
+  $fmv=killlaststr($fmv);
+  $allkeys=$fmk;
+  $tempdata=$fmv;
+  $zz=UX("insert into coode_dspcvindex(datamark,datasno,keymks,valmd5,keyvals,CRTM,UPTM,CRTOR,OLMK)values('".$dmark."','".($newsno)."','".$allkeys."','".md5($tempdata)."','".$tempdata."',now(),now(),'".$_COOKIE["uid"]."','".onlymark()."') ON DUPLICATE KEY update UPTM=now(),keymks='".$allkeys."',valmd5='".md5($tempdata)."',keyvals='".$tempdata."'");
+  //$bb=addprcx("insert into coode_dspcvindex(datamark,datasno,keymks,valmd5,keyvals,CRTM,UPTM,CRTOR,OLMK)values('".$dmark."','".($newsno)."','".$allkeys."','".md5($tempdata)."','".$tempdata."',now(),now(),'".$_COOKIE["uid"]."','".onlymark()."') ON DUPLICATE KEY update UPTM=now(),keymks='".$allkeys."',valmd5='".md5($tempdata)."',keyvals='".$tempdata."'".huanhang());
+  }else{
+  $temppart=$pvstr;
+  $tempkey=qian($pvstr,"=");
+  $tempval=unstrs(hou($pvstr,"="));
+  $kval[$tempkey]=dftval($tempval,unstrs($_POST[$tempkey]));   
+  
+  $tt=UX("insert into coode_dspcval(datamark,datasno,keymark,keytitle,keytype,keylen,CRTM,UPTM,OLMK)select datamark,'".($newsno)."',keymark,keytitle,keytype,keylen,now(),now(),RAND()*1000000 from coode_dspckey where datamark='".$dmark."'");
+  $dskrst=SX("select keymark,keytype,keytitle from coode_dspckey where datamark='".$dmark."'");
+  $totds=countresult($dskrst);
+  $fmk="";
+  $fmv="";
+  for ($oo=0;$oo<$totds;$oo++){
+   $kmk=anyvalue($dskrst,"keymark",$oo);
+   $ktp=anyvalue($dskrst,"keytype",$oo);
+   $fmk=$fmk.$kmk.",";
+   $fmv=$fmv.$kval[$kmk]."@-@";
+   $kxx=$ktp."val";
+   $dx=UX("update coode_dspcval set ".$kxx."='".$kval[$kmk]."',UPTM=now() where datamark='".$dmark."' and datasno='".($newsno)."' and keymark='".$kmk."'");  
+  }
+  $fmk=killlaststr($fmk);
+  $fmv=killlaststr($fmv);
+  $fmv=killlaststr($fmv);
+  $fmv=killlaststr($fmv);
+  $allkeys=$fmk;
+  $tempdata=$fmv;
+  $zz=UX("insert into coode_dspcvindex(datamark,datasno,keymks,valmd5,keyvals,CRTM,UPTM,CRTOR,OLMK)values('".$dmark."','".($newsno)."','".$allkeys."','".md5($tempdata)."','".$tempdata."',now(),now(),'".$_COOKIE["uid"]."','".onlymark()."') ON DUPLICATE KEY update UPTM=now(),keymks='".$allkeys."',valmd5='".md5($tempdata)."',keyvals='".$tempdata."'");
+  }
+  $nn=RD($dmark);
+ }else{
+  return -3.14;
+ }
+}
+function takevaljson($jsonfile){
+ $jsontxt=file_get_contents($jsonfile);
+ $jsondata=json_decode($jsontxt);
+ $tabnm=$jsondata->tabnm;
+ $crtsql=$jsondata->crtsql;
+ $vls=$jsondata->vls;
+ $stt=$jsondata->status;
+ $fmk="";
+ $fmv="";
+ if (intval($stt)>0){
+  $exttab=UX("select count(*) as result from coode_tablist where TABLE_NAME='".$tabnm."'");
+  if (intval($exttab)==0){
+   $z0=crttab(0,$crtsql);   
+   $sqlx="TABLE_NAME,tabtitle,CRTM,UPTM,OLMK";
+   $sqly="'$tabnm','$tabnm',now(),now(),'".onlymark()."'";
+   $zz=UX("insert into coode_tablist(".$sqlx.")values(".$sqly.")");
+  }else{
+    $oldcrt=tabmake($tabnm);
+    $newcrt=$crtsql;
+    if ($oldcrt!="" and $newcrt!=""){
+        $astr=tabalter($oldcrt,$newcrt);
+    }else{
+        $astr="nokey";
+    }
+    if ($astr!="nokey"){
+       $conn=mysql_connect(gl(),glu(),glp());
+       $nn=updatingx($conn,glb(),$astr,"utf8");
+    }
+  }
+   $tbrst=SX("select srckey,srcttk,parreskey from coode_tablist where TABLE_NAME='".$tabnm."'");
+   $srckey=anyvalue($tbrst,"srckey",0);
+   $parkey=anyvalue($tbrst,"parreskey",0);
+  if ($srckey==""){
+    // for ($j=0;$j<count($vls);$j++){
+    //  $fmk=$fmk.$vls[$j]->keymark.",";
+    //  $fmv=$fmv."'".str_replace("'","\'",$vls[$j]->kvalue)."',";
+    // }
+    // $fmk=killlaststr($fmk);
+    // $fmv=killlaststr($fmv); 
+    // $zz=UX("insert into ".$tabnm."(".$fmk.")values(".$fmv.")");         
+    return false;
+  }else{//extsrc
+   $srcval="";
+   $parval="";
+   $fmupdt="";
+   $fmcdt="";
+   if ($srckey!=""){
+    
+    for ($j=0;$j<count($vls);$j++){
+     if ($vls[$j]->keymark==$srckey or $vls[$j]->keymark==$parkey){
+       if ($vls[$j]->keymark==$srckey){
+         $srcval=$vls[$j]->kvalue;
+       }else{
+         $parval=$vls[$j]->kvalue;
+       }
+     }else{
+       $fmupdt=$fmupdt.$vls[$j]->keymark."='".str_replace("'","\'",$vls[$j]->kvalue)."',";
+       $fmcdt=$fmcdt." ".$vls[$j]->keymark."='".$vls[$j]->kvalue."' and";
+     }   
+    }//for
+     $fmupdt=killlaststr($fmupdt);
+    if ($srcval==""){
+      return false;
+    }
+    if ($parkey!=""){     
+      if ($parval==""){
+       return false;
+      }
+      $extdd=UX("select count(*) as result from ".$tabnm." where  ".$srckey."='".$srcval."' and ".$parkey."='".$parval."'");      
+    }else{     
+      $extdd=UX("select count(*) as result from ".$tabnm." where  ".$srckey."='".$srcval."'");
+    }
+    if ($extdd==0){
+     for ($j=0;$j<count($vls);$j++){
+      $fmk=$fmk.$vls[$j]->keymark.",";
+      $fmv=$fmv."'".str_replace("'","\'",$vls[$j]->kvalue)."',";
+     }
+     $fmk=killlaststr($fmk);
+     $fmv=killlaststr($fmv); 
+     $zz=UX("insert into ".$tabnm."(".$fmk.")values(".$fmv.")");  
+     //$zz=addprcx ("insert into ".$tabnm."(".$fmk.")values(".$fmv.")@tabdataoprt");
+    }else{   
+     if ($parkey!=""){
+       $zz=UX("update ".$tabnm." set ".$fmupdt." where ".$parkey."='".$parval."' and ".$srckey."='".$srcval."'");      
+     }else{
+       $zz=UX("update ".$tabnm." set ".$fmupdt." where ".$srckey."='".$srcval."'");      
+       //$zz1=addprcx("update ".$tabnm." set ".$fmupdt." where ".$srckey."='".$srcval."'@tabdataoprt");
+     }
+    }//ifextdd
+    if ($parkey!=""){     
+      $extd=UX("select count(*) as result from ".$tabnm." where  ".$srckey."='".$srcval."' and ".$parkey."='".$parval."'");
+    }else{
+      $extd=UX("select count(*) as result from ".$tabnm." where  ".$srckey."='".$srcval."'");
+    }
+    if (intval($extd)>0){
+      return true;
+    }else{
+      return false;
+    }
+   }else{
+     return false;
+   }//srckey
+  }//extsrc
+   return true;
+ }else{//stt
+   return false;
+ }
+}
+function tornx($txx){
+  if ($txx==true){
+   return 1;
+  }else{
+   return 0;
+  }
+}
+$succx=0;
+ if (es($restype)*es($rescode)==1){
+   switch($restype){
+    case "pagex":
+        $newurl=combineurl(localroot(),"/install/resjar/pagex/".$rescode."/".$rescode."_pagex.zip");
+     if ($fromhost!=""){
+      $resurl=combineurl($reshost,"/systemres/".$sysid."/pagex/".$rescode."/".$rescode."_pagex.zip"); 
+     }
+     $newpath=combineurl(localroot(),"/remotexres/receive/pagex/".$rescode."/");
+    break;
+    case "tempx":
+        $newurl=combineurl(localroot(),"/install/resjar/tempx/".qian($rescode,".")."/".qian($rescode,".")."_tempx.zip");
+    if ($fromhost!=""){    
+        $resurl=combineurl($reshost,"/systemres/".$sysid."/tempx/".qian($rescode,".")."/".qian($rescode,".")."_tempx.zip");  
+    }
+    $newpath=combineurl(localroot(),"/remotexres/receive/tempx/".qian($rescode,".")."/");
+    $tarpath=combineurl(localroot(),"/localxres/tempx/".qian($rescode,".")."/"); 
+    break;
+    default:
+         $newurl=combineurl(localroot(),"/install/resjar/".$restype."/".$rescode."/".$rescode."_".$restype.".zip");
+     if ($fromhost!=""){    
+      $resurl=combineurl("http://".$reshost,"/systemres/".$sysid."/".$restype."/".$rescode."/".$rescode."_".$restype.".zip");  
+     }
+
+    $newpath=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/");
+    $tarpath=combineurl(localroot(),"/localxres/".$restype."/".$rescode."/"); 
+   }
+   $err="";
+   if ($fromhost==""){
+        $zz=unzip($newurl,$newpath);
+   }else{
+    if (downanyfile($resurl,$newurl)==true){
+     $zz=unzip($newurl,$newpath);
+    }else{
+     $err="下载失败";
+    }
+   }
+    switch($restype){
+     case "pagex":
+      $jsonf0=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
+      $uu=takevaljson($jsonf0);
+      $succx=$succx+tornx($uu);
+      $jsonf1=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-pagedata.json");
+      $uu=takevaljson($jsonf1);
+      $succx=$succx+tornx($uu);
+      $jsonf2=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-app.json");
+      $uu=takevaljson($jsonf2);
+      $succx=$succx+tornx($uu);
+      $jsonf3=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-lay.json");
+      $uu=takevaljson($jsonf3);
+      $succx=$succx+tornx($uu);
+      $jsonf4=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-temp.json");
+      $uu=takevaljson($jsonf4);
+      $succx=$succx+tornx($uu);
+      $trst=SX("select sysid,appid,layid,tempid from coode_tiny where tinymark='".$rescode."'");
+      $totx=countresult($trst);
+      $sysid=anyvalue($trst,"sysid",0);
+      $appid=anyvalue($trst,"appid",0);
+      $layid=anyvalue($trst,"layid",0);
+      $tempid=anyvalue($trst,"tempid",0);
+      if ($totx>0){
+        if ($tempid!=""){
+         $tarpath=combineurl(localroot(),"/localxres/pagex/".qian($tempid,".")."/".$rescode."/"); 
+        }else{
+         $tarpath=combineurl(localroot(),"/localxres/pagex/seedx/".$rescode."/"); 
+        }
+      }else{
+       $tarpath="";
+      }
+     break;
+     case "tabx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);        
+     $crtsql=$relydata->crtsql;
+        $z0=crttab(0,$crtsql);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $zz=anyfunrun("initialize","","","");
+     break;
+     case "formx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $zz=anyfunrun("initialize","","","");
+     break;
+     case "plotx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     break;
+     case "groupx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     break;
+     case "dataspacex":
+     $kk0=UX("delete from coode_dataspace where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckey where datamark='".$rescode."'");
+     $kk0=UX("delete from coode_dspcvindex where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyx where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyy where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyz where datamark='".$rescode."'");
+     
+     
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $jsfile=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/jsshort.json");
+     $jsshort=file_get_contents($jsfile);
+     $jsdata=json_decode($jsshort,false);
+     $ktps=$jsdata->keytps;
+     $vls=$jsdata->vls;
+     $fmktp="";
+     for ($kk=0;$kk<count($ktps);$kk++){
+       $keyid=$ktps[$kk]->keyid;
+      if ($keyid!="datasno"){
+        $fmktp=$fmktp.$ktps[$kk]->keyid."&";
+      }
+     }
+     $fmktp=killlaststr($fmktp);
+     for ($ii=0;$ii<count($vls);$ii++){
+      $fmvls="";
+      for ($kk=0;$kk<count($ktps);$kk++){
+        $tmpvx="";
+        $keyid=$ktps[$kk]->keyid;
+        if ($keyid!="datasno"){
+        
+        eval('$tmpvx=$vls[$ii]->'.$keyid.';');
+        $fmvls=$fmvls.$keyid."=".$tmpvx."&";
+        }
+      }
+      $fmvls=killlaststr($fmvls);
+      $nn=ND($rescode,$fmktp,$fmvls);
+     }
+     $xx=UX("insert into coode_dspckeyx(domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib)select domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib from coode_dspckey where datamark='".$rescode."'");
+     break;
+     default:
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".qian($rescode,".")."/".str_replace(".","_",$rescode)."_".$restype."-resdata.json");
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+   }
+    if ($tarpath!=""){    
+      $zz=copy_underdir($newpath,$tarpath);
+     if ($restype=="tempx" or $restype=="pagex"){
+      $localcss=combineurl(localroot(),"/localxres/csspagex/");     
+      $zz1=copy_underdir($tarpath,$localcss);
+      $zxc=deletefiles($localcss,0);//删除其余文件
+       
+     }
+    }
+  
+  
+    $sqla="insmark,institle,rescode,restype,restitle,VRT,sysid,CRTM,UPTM,finishtime,OLMK,STATUS";
+    $sqlb="'".date("Y-m-d")."','".getip()."','".$rescode."','".$restype."','".$rescode."','".$vermd5."','".$sysid."',now(),now(),now(),'".onlymark()."',1";
+    $zz=UX("insert into coode_installdetail(".$sqla.")values(".$sqlb.")");
+  
+  echo makereturnjson("1","成功安装".$succx."条。".$err,"");
+ 
+}else{
+  echo makereturnjson("0","安装失败-参数不全-".$fromhost."/".$restype."/".$rescode,"");
+}
+       session_write_close();
+?>
