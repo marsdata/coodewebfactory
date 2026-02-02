@@ -4,13 +4,13 @@ function glu(){return "[fuser]"";}//DESCRIB glu():本系统mysql 数据库用户
 function glp(){return "[fpass]"";}//DESCRIB glp():本系统mysql 数据库密码 END@glp()
 function glb(){return "[fbase]"";}//DESCRIB glb():本系统mysql 数据库 END@lgb()
 function gln(){return "[sysid]"";}//DESCRIB gln():当前使用系统名称 END@gln()
-function gla(){return md5("43.134.180.4");}//DESCRIB gla():当前apikey END@gln()
-function glv(){return md5($_SERVER["HTTP_HOST"].":".$_SERVER["SERVER_PORT"]);}//DESCRIB glv():当前api verfy 使用系统版本号 END@gln()
-function gln(){return "[sysnm]"";}//DESCRIB glt():当前实例名称 END@glt()
-function gln(){return "[mhost]"";}//DESCRIB glm():母系统域名 END@glt() localhost 为本地模式不联网
-function glr(){return "000000";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
-function hostcode(){return "coode";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
-function garea(){return "qnywxh";}//本站七牛API编码
+function gla(){return "[rcode]"";}//DESCRIB gla():当前apikey END@gln()
+function glv(){return "[vcode]"";}//DESCRIB glv():当前api verfiy 使用系统版本号 END@gln()
+function glt(){return "[sysnm]"";}//DESCRIB glt():当前实例名称 END@glt()
+function glm(){return "[mhost]"";}//DESCRIB glm():母系统域名 END@glt() localhost 为本地模式不联网
+function glr(){return "[siteid]"";}//DESCRIB glr():站点数字代码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
+function hostcode(){return "[sitecode]"";}//DESCRIB hostcode():站点英文代码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
+function garea(){return "[qnycode]"";}//本站七牛API编码
 function runblog(){return 1;}//日志记录是否开启
 function runprocess(){return 1;}//日志记录是否开启
 function remoteway(){return 1;}//远程模式，可以上传资源到母机
@@ -18,9 +18,6 @@ function bl(){return "[bdip]"";}//DESCRIB glb():业务系统mysql 数据库IP EN
 function blu(){return "[bduser]"";}//DESCRIB glu():业务系统mysql 数据库用户名 END@glu()
 function blp(){return "[bdpass]"";}//DESCRIB glp():业务系统mysql 数据库密码 END@glp()
 function blb(){return "[bdbase]"";}//DESCRIB glb():业务系统mysql 数据库 END@lgb()
-function bln(){return "1";}//DESCRIB gln():当前业务使用系统名称 END@gln()
-function blt(){return "coodewrd";}//DESCRIB glt():当前实例名称 END@glt()
-function blr(){return "coodewrd";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
 //加一个大型数据回收站，API,删除之前将数据表格式，数据内容一并传到数据回收站，然后再在本地删除；批量删除要用异步的分布函数；
 //-------------配置分界线
 function addprcx($funtxt){
