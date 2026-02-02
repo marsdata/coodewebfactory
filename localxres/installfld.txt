@@ -635,7 +635,7 @@ $succx=0;
     default:
          $newurl=combineurl(localroot(),"/install/resjar/".$restype."/".$rescode."/".$rescode."_".$restype.".zip");
      if ($fromhost!=""){    
-      $resurl=combineurl("http://".$reshost,"/systemres/".$sysid."/".$restype."/".$rescode."/".$rescode."_".$restype.".zip");  
+      $resurl=combineurl($reshost,"/systemres/".$sysid."/".$restype."/".$rescode."/".$rescode."_".$restype.".zip");  
      }
 
     $newpath=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/");
@@ -644,13 +644,6 @@ $succx=0;
    $err="";
    if ($fromhost==""){
         $zz=unzip($newurl,$newpath);
-   }else{
-    if (downanyfile($resurl,$newurl)==true){
-     $zz=unzip($newurl,$newpath);
-    }else{
-     $err="下载失败";
-    }
-   }
     switch($restype){
      case "pagex":
       $jsonf0=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
@@ -785,7 +778,7 @@ $succx=0;
      $xx=UX("insert into coode_dspckeyx(domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib)select domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib from coode_dspckey where datamark='".$rescode."'");
      break;
      default:
-      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".qian($rescode,".")."/".str_replace(".","_",$rescode)."_".$restype."-resdata.json");
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
       $uu=takevaljson($jsonf);
       $succx=$succx+tornx($uu);
    }
@@ -804,7 +797,169 @@ $succx=0;
     $sqlb="'".date("Y-m-d")."','".getip()."','".$rescode."','".$restype."','".$rescode."','".$vermd5."','".$sysid."',now(),now(),now(),'".onlymark()."',1";
     $zz=UX("insert into coode_installdetail(".$sqla.")values(".$sqlb.")");
   
-  echo makereturnjson("1","成功安装".$succx."条。".$err,"");
+    echo makereturnjson("1","本地成功安装".$succx."条。".$err,"");
+   }else{
+    if (downanyfile($resurl,$newurl)==true){
+     $zz=unzip($newurl,$newpath);
+    switch($restype){
+     case "pagex":
+      $jsonf0=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
+      $uu=takevaljson($jsonf0);
+      $succx=$succx+tornx($uu);
+      $jsonf1=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-pagedata.json");
+      $uu=takevaljson($jsonf1);
+      $succx=$succx+tornx($uu);
+      $jsonf2=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-app.json");
+      $uu=takevaljson($jsonf2);
+      $succx=$succx+tornx($uu);
+      $jsonf3=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-lay.json");
+      $uu=takevaljson($jsonf3);
+      $succx=$succx+tornx($uu);
+      $jsonf4=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-temp.json");
+      $uu=takevaljson($jsonf4);
+      $succx=$succx+tornx($uu);
+      $trst=SX("select sysid,appid,layid,tempid from coode_tiny where tinymark='".$rescode."'");
+      $totx=countresult($trst);
+      $sysid=anyvalue($trst,"sysid",0);
+      $appid=anyvalue($trst,"appid",0);
+      $layid=anyvalue($trst,"layid",0);
+      $tempid=anyvalue($trst,"tempid",0);
+      if ($totx>0){
+        if ($tempid!=""){
+         $tarpath=combineurl(localroot(),"/localxres/pagex/".qian($tempid,".")."/".$rescode."/"); 
+        }else{
+         $tarpath=combineurl(localroot(),"/localxres/pagex/seedx/".$rescode."/"); 
+        }
+      }else{
+       $tarpath="";
+      }
+     break;
+     case "tabx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);        
+     $crtsql=$relydata->crtsql;
+        $z0=crttab(0,$crtsql);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $zz=anyfunrun("initialize","","","");
+     break;
+     case "formx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $zz=anyfunrun("initialize","","","");
+     break;
+     case "plotx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     break;
+     case "groupx":
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     break;
+     case "dataspacex":
+     $kk0=UX("delete from coode_dataspace where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckey where datamark='".$rescode."'");
+     $kk0=UX("delete from coode_dspcvindex where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyx where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyy where datamark='".$rescode."'");
+     $kk1=UX("delete from coode_dspckeyz where datamark='".$rescode."'");
+     
+     
+     $relyresurl=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-relyres.json"); 
+     $relytxt=file_get_contents($relyresurl);
+     $relydata=json_decode($relytxt,false);
+     $vls=$relydata->vls;
+     for ($j=0;$j<count($vls);$j++){
+      $verx=$vls[$j]->resmd5;
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$verx.".json"); 
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+     }
+     $jsfile=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/jsshort.json");
+     $jsshort=file_get_contents($jsfile);
+     $jsdata=json_decode($jsshort,false);
+     $ktps=$jsdata->keytps;
+     $vls=$jsdata->vls;
+     $fmktp="";
+     for ($kk=0;$kk<count($ktps);$kk++){
+       $keyid=$ktps[$kk]->keyid;
+      if ($keyid!="datasno"){
+        $fmktp=$fmktp.$ktps[$kk]->keyid."&";
+      }
+     }
+     $fmktp=killlaststr($fmktp);
+     for ($ii=0;$ii<count($vls);$ii++){
+      $fmvls="";
+      for ($kk=0;$kk<count($ktps);$kk++){
+        $tmpvx="";
+        $keyid=$ktps[$kk]->keyid;
+        if ($keyid!="datasno"){
+        
+        eval('$tmpvx=$vls[$ii]->'.$keyid.';');
+        $fmvls=$fmvls.$keyid."=".$tmpvx."&";
+        }
+      }
+      $fmvls=killlaststr($fmvls);
+      $nn=ND($rescode,$fmktp,$fmvls);
+     }
+     $xx=UX("insert into coode_dspckeyx(domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib)select domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib from coode_dspckey where datamark='".$rescode."'");
+     break;
+     default:
+      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
+      $uu=takevaljson($jsonf);
+      $succx=$succx+tornx($uu);
+   }
+    if ($tarpath!=""){    
+      $zz=copy_underdir($newpath,$tarpath);
+     if ($restype=="tempx" or $restype=="pagex"){
+      $localcss=combineurl(localroot(),"/localxres/csspagex/");     
+      $zz1=copy_underdir($tarpath,$localcss);
+      $zxc=deletefiles($localcss,0);//删除其余文件
+       
+     }
+    }
+  
+  
+    $sqla="insmark,institle,rescode,restype,restitle,VRT,sysid,CRTM,UPTM,finishtime,OLMK,STATUS";
+    $sqlb="'".date("Y-m-d")."','".getip()."','".$rescode."','".$restype."','".$rescode."','".$vermd5."','".$sysid."',now(),now(),now(),'".onlymark()."',1";
+    $zz=UX("insert into coode_installdetail(".$sqla.")values(".$sqlb.")");
+  
+    echo makereturnjson("1","远程成功安装".$succx."条。",$resurl."-".$newurl);
+    }else{
+     $err="下载失败";
+    }
+   }
+
  
 }else{
   echo makereturnjson("0","安装失败-参数不全-".$fromhost."/".$restype."/".$rescode,"");
