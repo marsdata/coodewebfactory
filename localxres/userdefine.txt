@@ -1,0 +1,451 @@
+<?php
+function gl(){return "[fip]"";}//DESCRIB glb():本系统mysql 数据库IP END@glb()
+function glu(){return "[fuser]"";}//DESCRIB glu():本系统mysql 数据库用户名 END@glu()
+function glp(){return "[fpass]"";}//DESCRIB glp():本系统mysql 数据库密码 END@glp()
+function glb(){return "[fbase]"";}//DESCRIB glb():本系统mysql 数据库 END@lgb()
+function gln(){return "[sysid]"";}//DESCRIB gln():当前使用系统名称 END@gln()
+function gla(){return md5("43.134.180.4");}//DESCRIB gla():当前apikey END@gln()
+function glv(){return md5($_SERVER["HTTP_HOST"].":".$_SERVER["SERVER_PORT"]);}//DESCRIB glv():当前api verfy 使用系统版本号 END@gln()
+function gln(){return "[sysnm]"";}//DESCRIB glt():当前实例名称 END@glt()
+function gln(){return "[mhost]"";}//DESCRIB glm():母系统域名 END@glt() localhost 为本地模式不联网
+function glr(){return "000000";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
+function hostcode(){return "coode";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
+function garea(){return "qnywxh";}//本站七牛API编码
+function runblog(){return 1;}//日志记录是否开启
+function runprocess(){return 1;}//日志记录是否开启
+function remoteway(){return 1;}//远程模式，可以上传资源到母机
+function bl(){return "[bdip]"";}//DESCRIB glb():业务系统mysql 数据库IP END@glb()
+function blu(){return "[bduser]"";}//DESCRIB glu():业务系统mysql 数据库用户名 END@glu()
+function blp(){return "[bdpass]"";}//DESCRIB glp():业务系统mysql 数据库密码 END@glp()
+function blb(){return "[bdbase]"";}//DESCRIB glb():业务系统mysql 数据库 END@lgb()
+function bln(){return "1";}//DESCRIB gln():当前业务使用系统名称 END@gln()
+function blt(){return "coodewrd";}//DESCRIB glt():当前实例名称 END@glt()
+function blr(){return "coodewrd";}//DESCRIB glr():授权注册码 END@glt() 申请试用后，提供服务器IP地址，给您安装，转移操作
+//加一个大型数据回收站，API,删除之前将数据表格式，数据内容一并传到数据回收站，然后再在本地删除；批量删除要用异步的分布函数；
+//-------------配置分界线
+function addprcx($funtxt){
+
+    if (runprocess()==1){
+     $fnm=combineurl(localroot(),"/localxres/".date("Y-m-d").".txt");
+     
+     if (file_exists($fnm)){
+         $aa=appendfile($fnm,$funtxt.huanhang());
+     }else{
+         $aa=overfile($fnm,$funtxt.huanhang());
+     }
+     return true;
+    }else{
+        return false;
+    }
+}
+function addprc($funtype,$funid,$fline,$pakv,$prst){
+      //$pakvx="获取上传地址，参数不齐全";
+      //$prstx=$purl;
+      //$nn=addprc("sfunx","resnmtomother",193,$pakvx,$prstx);
+    if (runprocess()==1){
+     $sqlx="protime,pageurl,funtype,funid,funline,parakv,cresult,visituid,visitcid,CRTM,UPTM,OLMK";
+     $sqly="now(),'".thisurl()."','$funtype','$funid','$fline','$pakv','$prst','".$_COOKIE["uid"]."','".$_COOKIE["cid"]."',now(),now(),'".onlymark()."'";
+     $zz=UX("insert into coode_runprocess(".$sqlx.")values(".$sqly.")");
+     return true;
+    }else{
+        return false;
+    }
+}
+function verifyscv($apikx,$apivx){
+    $rstx=SX("select SNO,STATUS from coode_scvuser where apikey='".$apikx."' and apival='".$apivx."'");
+    $totrx=countresult($rstx);
+    if (intval($totrx)>0){
+        $status=anyvalue($rstx,"STATUS",0);
+        if (intval($status)>0){
+            return true;
+        }else{
+            return false;    
+        }
+    }else{
+        $sqlx="hostip,hostdomain,hosttitle,apikey,apival,lastvisit,OLMK,CRTM,UPTM,hostrolex";
+        $sqly="'".getip()."','".qian(hou(getfromurl(),"//"),"/")."','','".$apikx."','".$apivx."',now(),'".onlymark()."',now(),now(),'commonuser'";
+        $zz=UX("insert into coode_scvuser(".$sqlx.")values(".$sqly.")");
+        return false;
+    }
+    
+}
+function kvexc($keystr,$valstr,$kx){
+  $ptkey=explode(",",$keystr);
+  $ptval=explode(",",$valstr);
+  $totpt=count($ptkey);
+  for ($kk=0;$kk<$totpt;$kk++){
+   if ($ptkey[$kk]==$kx){
+       return $ptval[$kk];
+   }   
+  }
+    return $kx;
+}
+function anyshort($stid,$page,$pagenum){ 
+  $urix=$_SERVER['REQUEST_URI'];
+  $uriy=hou($urix,"?");
+  $dbmk=dftval($_GET["dbmk"],"");
+  $gofun=dftval($_GET["gofun"],"");
+  if ($gofun!=""){
+      header("location:/localxres/funx/".$gofun."/?".$uriy);
+  }
+  
+  $ptur=explode("&",$uriy);
+  $totpt=count($ptur);
+  $notx="-/stid/page/pnum/pagenum/rdr/rnd/datatype/qry/qrl/xkey/xval/sc/";
+  $fmkvx="";
+  for ($z=0;$z<$totpt;$z++){
+    if (strpos($notx,"/".qian($ptur[$z],"=")."/")>0){
+    }else{
+      $fmkvx=$fmkvx."&".qian($ptur[$z],"=")."=".hou($ptur[$z],"=");
+    }
+  }  
+  $_GET["fmkvx"]=$fmkvx;  
+  $page=str_replace("undefined","1",$page);  
+  $pagenum=str_replace("undefined","30",$pagenum);    
+  
+  $sid="";
+  if (strpos($stid,"-")>0){
+    $sid=qian($stid,"-");
+    $sfile=qian(hou($stid,"sfile:"),"-");
+    $spage=qian(hou($stid,"pnum:"),"-");
+  }else{
+    $sid=$stid;
+    $sfile="";
+    $spage=$_GET["pagenum"].$_GET["pnum"];
+  };
+  if ($pagenum=="" and _get("pnu")!="0"){
+    $pagenum=$spage;
+  };
+  
+  
+eval(RESFUNSET("tabbaseinfo"));
+eval(RESFUNSET("formbase"));
+eval(RESFUNSET("formvalue")); 
+eval(RESFUNSET("keyfunbase")); 
+eval(RESFUNSET("keyinfo")); 
+eval(RESFUNSET("tabhtmlmake")); 
+ if ($dbmk==""){
+    $rst=SX("select tablename,showkeys,cdt,orddt,dttp,PTOF,STCODE,allkeys from coode_shortdata where shortid='".$sid."'");
+ }else{
+    $rst=SX("select tablename,showkeys,cdt,orddt,dttp,PTOF,STCODE,allkeys from coode_dbshort where shortid='".$sid."' and catalog='".$dbmk."'");
+ }
+  $totrst=countresult($rst);
+  
+  if ($totrst>0){  
+    $tbnmm=dftval($_GET["tablename"],anyvalue($rst,"tablename",0));
+    $tabnm=dftval($_GET["tablename"],anyvalue($rst,"tablename",0));
+    $oritab=anyvalue($rst,"tablename",0);
+    if ($dbmk!=""){
+      $dinfo=array();
+      $dinfo=takedbinfo($dbmk,$oritab,$dinfo);
+    }else{
+      $dinfo=array();
+      $dinfo=takedbinfo("",$oritab,$dinfo);
+    }
+     
+    $showkeys=tostring(anyvalue($rst,"showkeys",0));
+    $tbkiss=tostring(anyvalue($rst,"showkeys",0));
+    $aks=tostring(anyvalue($rst,"allkeys",0));
+    $tbcdt=tostring(anyvalue($rst,"cdt",0));
+    $odcdt=tostring(anyvalue($rst,"orddt",0));
+    $enaks=hou($aks,"|");
+    $dtpp=anyvalue($rst,"dttp",0);
+    
+    switch($dtpp){
+        case "clstxt":
+        $fmcdt="";
+       if ($tbcdt==""){
+          $fmcdt=" 1>0 ";
+       }else{
+          $fmcdt=$tbcdt;
+       }
+        $tbcdtss=$fmcdt;
+       if ($_COOKIE["uid"]!=""){
+		  $tbcdtss=str_replace("[uid]",$_COOKIE["uid"],$tbcdtss);
+        }else{
+          $tbcdtss=str_replace("[uid]",$_COOKIE["userid"],$tbcdtss);    
+        }
+        if ($_COOKIE["uid"]!=""){
+          $tbcdtss=str_replace("[cid]",$_COOKIE["cid"],$tbcdtss);
+        }else{
+          $tbcdtss=str_replace("[cid]",$_COOKIE["comid"],$tbcdtss);
+        }
+        $tbcdtss=str_replace("[grpcid]",$_COOKIE["grpcid"],$tbcdtss);
+        $tbcdtss=str_replace("[posids]",$_COOKIE["posids"],$tbcdtss);
+        $tbcdtss=str_replace("[depart]",$_COOKIE["depart"],$tbcdtss);
+        $tbcdtss=str_replace("[dpts]",$_COOKIE["dpts"],$tbcdtss);
+		$tbcdtss=str_replace("[date]",date("Y-m-d"),$tbcdtss);
+		$tbcdtss=str_replace("[now]",date("Y-m-d H:i:s"),$tbcdtss);
+        $ptnhtxt=explode("[get-key",$tbcdtss);
+        $totpt=count($ptnhtxt);
+        for ($f=0;$f<$totpt;$f++){
+          $tmpok=qian($ptnhtxt[$f],"]");
+          $tbcdtss=str_replace("[get-key".$tmpok."]",$_GET["key".$tmpok],$tbcdtss);     
+        };         
+        
+		$tbcdtss=str_replace("[anymark]",date("YmdHis").getRandChar(6),$tbcdtss);        
+        $charax=$sid.$tbcdtss.$odcdt;
+        $charax=str_replace(" ","",$charax);
+        $charax=str_replace("'","",$charax);
+        $charax=str_replace("'","",$charax);
+        $charax=str_replace("=","eq",$charax);
+        $charax=str_replace(">","gr",$charax);
+        $charax=str_replace("<","le",$charax);
+        $charax=str_replace("%","0",$charax);
+        $tmpsession="";
+        $tmpsession=$_SESSION[$charax];
+         
+         if ($dbmk==""){
+            $conn=mysql_connect(gl(),glu(),glp()); 
+            $dtrst=SX("select ".$tbkiss." from ".$oritab." where ".$tbcdtss." ".$odcdt); 
+         }else{
+            $conn=mysql_connect($dinfo["fip"],$dinfo["fuser"],$dinfo["fpass"]);
+            $dtrst=selectedx($conn,$dinfo["fbase"],"select ".$tbkiss." from ".$oritab." where ".$tbcdtss." ".$odcdt,"utf8",""); 
+         }
+          $totrst=countresult($dtrst);
+         if ($totrst>0){
+          $arrdt=arrdata($arrdt,$dtrst);//arrdata()返回 的数组是 arrdata['key'][1~ToTrst]
+          $tmpvk="";   //这里不是KEY存在的,而是两个数据当成K|V形态
+          $tmpvv="";
+          for ($i=1;$i<=$totrst;$i++){
+           $tmpvk=$tmpvk.$arrdt[qian($tbkiss,",")][$i].",";
+           $tmpvv=$tmpvv.$arrdt[hou($tbkiss,",")][$i].",";
+          };
+           $tmpvk=substr($tmpvk,0,strlen($tmpvk)-1);
+           $tmpvv=substr($tmpvv,0,strlen($tmpvv)-1);
+           $fmtmpvs=$tmpvk."|".$tmpvv;           
+           $_SESSION[$charax]=$fmtmpvs;
+           //if ($stid=="5Opeqq"){
+             //return "wocao-select ".$tbkiss." from ".$tbnmm." where ".$tbcdtss.$odcdt;
+          // }else{
+            return $fmtmpvs;
+          // }
+         }else{
+          return "";//"NIMA".$_COOKIE["cid"]."-no Rst-select ".$tbkiss." from ".$tbnmm." where ".$tbcdtss.$odcdt;
+         };
+    break;
+    default:
+        
+      $qry=unstrs($_GET["qry"]);
+      if ($qry==""){
+         $qry=unstrs($_POST["skey"]);
+      }
+      $qrl="";
+      $val="";
+      $xkey=$_GET["xkey"];
+      $xval=$_GET["xval"];
+      if (strpos($page,":")>0){
+        $qrl=hou($page,":");
+        $page=qian($page,":");
+      }; 
+      if (strpos($pagenum,":")>0){
+        $val=hou($pagenum,":");
+        $pagenum=qian($pagenum,":");
+      };
+       $fmbdt="";
+       $fmcdt="";
+       $fmsdt="";
+       if ($val!=""){
+        if (substr($qrl,0,1)=="@"){
+            if (hou($qrl,"@")!=""){
+             $fmbdt=" ".hou($qrl,"@")." like '%".$val."%' ";      
+            }
+        }else{
+            if ($qrl!=""){
+              $fmbdt=" ".$qrl."='".$val."' ";  
+            }
+        };
+       }//$val 
+       if ($xkey!="" and $qry=="" ){
+       }else{
+        $tmpdd="";
+        if ($dtpp!="clstxt"){
+          $tmpdd=$tmpdd.formdcdt($enaks,$kothern);
+          if ($tmpdd!=""){
+           $tmpdd=substr($tmpdd,0,strlen($tmpdd)-4);
+          } 
+        }
+
+        if ($qry!=""){
+          if ($tmpdd!=""){
+            $fmsdt="( concat(".$tbkiss.") like '%".$qry."%') and (".$tmpdd.")";
+          }else{
+            $fmsdt=" concat(".$tbkiss.") like '%".$qry."%' ";
+          }
+        }else{
+          if ($tmpdd!=""){
+            $fmsdt=" (".$tmpdd.") ";
+          }else{
+            $fmsdt="";
+          };         
+        }; //qry   
+       };//if qry  xkey    
+       if ($fmbdt!="" and $fmsdt!=""){
+        $fmcdt=$fmbdt." and ".$fmsdt;
+       }else{
+        $fmcdt=$fmbdt.$fmsdt;
+       }  
+      
+       if ($tbcdt==""){
+          $tbcdtx="1>0";
+       }else{
+           $tbcdtx=$tbcdt;
+       };
+       if ($fmcdt==""){
+            $tbcdtss=$tbcdtx;        
+       }else{        
+            $tbcdtss=$tbcdtx." and ".$fmcdt;        
+       };
+       
+       if (intval($pagenum)*1==0){
+            if ($_COOKIE["uid"]!=""){
+		      $tbcdtss=str_replace("[uid]",$_COOKIE["uid"],$tbcdtss);
+            }else{
+              $tbcdtss=str_replace("[uid]",$_COOKIE["userid"],$tbcdtss);    
+            }
+            if ($_COOKIE["uid"]!=""){
+              $tbcdtss=str_replace("[cid]",$_COOKIE["cid"],$tbcdtss);
+            }else{
+              $tbcdtss=str_replace("[cid]",$_COOKIE["comid"],$tbcdtss);
+            }
+            $tbcdtss=str_replace("[grpcid]",$_COOKIE["grpcid"],$tbcdtss);
+            $tbcdtss=str_replace("[posids]",$_COOKIE["posids"],$tbcdtss);
+            $tbcdtss=str_replace("[depart]",$_COOKIE["depart"],$tbcdtss);
+            $tbcdtss=str_replace("[dpts]",$_COOKIE["dpts"],$tbcdtss);
+            $tbcdtss=str_replace("[date]",date("Y-m-d"),$tbcdtss);
+            $tbcdtss=str_replace("[now]",date("Y-m-d H:i:s"),$tbcdtss);
+            $ptnhtxt=explode("[get-",$tbcdtss);
+            $totpt=count($ptnhtxt);
+            for ($f=0;$f<$totpt;$f++){
+              $tmpok=qian($ptnhtxt[$f],"]");
+              $tbcdtss=str_replace("[get-".$tmpok."]",$_GET[$tmpok],$tbcdtss);     
+            };         
+            $ptnhtxt=explode("[post-",$tbcdtss);
+            $totpt=count($ptnhtxt);
+            for ($f=0;$f<$totpt;$f++){
+              $tmpok=qian($ptnhtxt[$f],"]");
+              $tbcdtss=str_replace("[post-".$tmpok."]",$_POST[$tmpok],$tbcdtss);     
+            };
+            $ptnhtxt=explode("[cookie-",$tbcdtss);
+            $totpt=count($ptnhtxt);
+            for ($f=0;$f<$totpt;$f++){
+              $tmpok=qian($ptnhtxt[$f],"]");
+              $tbcdtss=str_replace("[cookie-".$tmpok."]",$_COOKIE[$tmpok],$tbcdtss);
+            };
+            $tbcdtss=str_replace("[anymark]",date("YmdHis").getRandChar(6),$tbcdtss);      
+
+                if ($dbmk==""){
+                   $totx=UX("select count(*) as result from ".$tabnm." where ".$tbcdtss);
+                }else{
+                   $conn=mysql_connect($dinfo["fip"],$dinfo["fuser"],$dinfo["fpass"]);
+                   $dbname=$dinfo["fbase"];
+                   $totx=updatings($conn,$dbname,"select count(*) as result from ".$tabnm." where ".$tbcdtss,"utf8");
+                }
+                
+                $mksql="select ".$showkeys." from ".$tabnm." where ".$tbcdtss." ".$odcdt;
+                
+                if (strpos($mksql,"elect")>0 and strpos($mksql,"from")>0){
+                  $partsql=get_between($mksql,"elect "," from");
+                }
+                if (strpos($sqlstr,"ELECT")>0 and strpos($sqlstr,"FROM")>0){
+                  $partsql=get_between($mksql,"ELECT "," FROM");
+                }
+                if ($dbmk==""){
+                   $conn=mysql_connect(gl(),glu(),glp());
+                   $dbname=glb();
+                }else{
+                   $conn=mysql_connect($dinfo["fip"],$dinfo["fuser"],$dinfo["fpass"]);
+                   $dbname=$dinfo["fbase"];
+                   
+                }
+                $bkjson=selectjson($conn,$dbname,$mksql,"utf8");
+                if (substr($bkjson,0,1)=="@"){
+                    $formtxt=makereturnjson("0","获取失败",$bkjson);
+                }else{
+                    $formtxt='{"status":"1","msg":"获取成功","tbname":"'.$oritab.'","tbdata":"'.$tabnm.'","totrcd":"'.$totx.'","qrystr":"'.$qryxyz.'","keys":"'.$partsql.'","sqlstr":"'.gohex($mksql).'","ktps":'.makekeytype($dbmark,$oritab,$showkeys).',"vls":'.$bkjson.'}';
+                }
+             return $formtxt;
+
+
+       }else{//page *1
+          if ($_COOKIE["uid"]!=""){
+            $tbcdtss=str_replace("[uid]",$_COOKIE["uid"],$tbcdtss);
+          }else{
+            $tbcdtss=str_replace("[uid]",$_COOKIE["userid"],$tbcdtss);    
+          }
+          if ($_COOKIE["uid"]!=""){
+            $tbcdtss=str_replace("[cid]",$_COOKIE["cid"],$tbcdtss);
+          }else{
+            $tbcdtss=str_replace("[cid]",$_COOKIE["comid"],$tbcdtss);
+          }
+          $tbcdtss=str_replace("[grpcid]",$_COOKIE["grpcid"],$tbcdtss);
+          $tbcdtss=str_replace("[posids]",$_COOKIE["posids"],$tbcdtss);
+          $tbcdtss=str_replace("[depart]",$_COOKIE["depart"],$tbcdtss);
+          $tbcdtss=str_replace("[dpts]",$_COOKIE["dpts"],$tbcdtss);
+		  $tbcdtss=str_replace("[date]",date("Y-m-d"),$tbcdtss);
+		  $tbcdtss=str_replace("[now]",date("Y-m-d H:i:s"),$tbcdtss);
+          $ptnhtxt=explode("[get-",$tbcdtss);
+          $totpt=count($ptnhtxt);
+          for ($f=0;$f<$totpt;$f++){
+            $tmpok=qian($ptnhtxt[$f],"]");
+            $tbcdtss=str_replace("[get-".$tmpok."]",$_GET[$tmpok],$tbcdtss);     
+          };         
+          $ptnhtxt=explode("[post-",$tbcdtss);
+          $totpt=count($ptnhtxt);
+          for ($f=0;$f<$totpt;$f++){
+            $tmpok=qian($ptnhtxt[$f],"]");
+            $tbcdtss=str_replace("[post-".$tmpok."]",$_POST[$tmpok],$tbcdtss);     
+          };
+          $ptnhtxt=explode("[cookie-",$tbcdtss);
+          $totpt=count($ptnhtxt);
+          for ($f=0;$f<$totpt;$f++){
+            $tmpok=qian($ptnhtxt[$f],"]");
+            $tbcdtss=str_replace("[cookie-".$tmpok."]",$_COOKIE[$tmpok],$tbcdtss);     
+          };
+		  $tbcdtss=str_replace("[anymark]",date("YmdHis").getRandChar(6),$tbcdtss);
+
+                if ($dbmk==""){
+                   $totx=UX("select count(*) as result from ".$tabnm." where ".$tbcdtss);
+                }else{
+                   $conn=mysql_connect($dinfo["fip"],$dinfo["fuser"],$dinfo["fpass"]);
+                   $dbname=$dinfo["fbase"];
+                   $totx=updatings($conn,$dbname,"select count(*) as result from ".$tabnm." where ".$tbcdtss,"utf8");
+                }
+                
+                $mksql="select ".$showkeys." from ".$tabnm." where ".$tbcdtss." ".$odcdt." ".makepagecdt($page,$pagenum);
+                
+                if (strpos($mksql,"elect")>0 and strpos($mksql,"from")>0){
+                  $partsql=get_between($mksql,"elect "," from");
+                }
+                if (strpos($sqlstr,"ELECT")>0 and strpos($sqlstr,"FROM")>0){
+                  $partsql=get_between($mksql,"ELECT "," FROM");
+                }
+                if ($dbmk==""){
+                   $conn=mysql_connect(gl(),glu(),glp());
+                   $dbname=glb();
+                }else{
+                   $conn=mysql_connect($dinfo["fip"],$dinfo["fuser"],$dinfo["fpass"]);
+                   $dbname=$dinfo["fbase"];
+                }
+                
+                $bkjson=selectjson($conn,$dbname,$mksql,"utf8");
+                if (substr($bkjson,0,1)=="@"){
+                    $formtxt=makereturnjson("0","获取失败",$bkjson);
+                }else{
+                    $formtxt='{"status":"1","msg":"获取成功","tbname":"'.$oritab.'","tbdata":"'.$tabnm.'","totrcd":"'.$totx.'","qrystr":"'.$qryxyz.'","keys":"'.$partsql.'","sqlstr":"'.gohex($mksql).'","ktps":'.makekeytype($dbmk,$oritab,$showkeys).',"vls":'.$bkjson.'}';
+                }
+             return $formtxt;
+       };//pagenum
+      
+     }//switch
+      
+
+ }else{
+     return "";
+ };//totrst
+}//function
+
+
+
+
+?>
