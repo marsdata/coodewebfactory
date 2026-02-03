@@ -642,7 +642,7 @@ $succx=0;
     $tarpath=combineurl(localroot(),"/localxres/".$restype."/".$rescode."/"); 
    }
    $err="";
-   if ($fromhost==""){
+   if ($fromhost=="" or $fromhost=="local" ){
         $zz=unzip($newurl,$newpath);
     switch($restype){
      case "pagex":
@@ -778,7 +778,11 @@ $succx=0;
      $xx=UX("insert into coode_dspckeyx(domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib)select domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib from coode_dspckey where datamark='".$rescode."'");
      break;
      default:
-      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
+      if ($restype=="tempx"){
+        $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".qian($rescode,".")."/".str_replace(".","_",$rescode)."_".$restype."-resdata.json");
+      }else{
+        $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");  
+      }
       $uu=takevaljson($jsonf);
       $succx=$succx+tornx($uu);
    }
@@ -935,7 +939,11 @@ $succx=0;
      $xx=UX("insert into coode_dspckeyx(domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib)select domainmark,datamark,keymark,keytitle,keylen,clstxt,classp,sqx,keytype,dxtype,keydescrib from coode_dspckey where datamark='".$rescode."'");
      break;
      default:
-      $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");
+      if ($restype=="tempx"){
+        $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".qian($rescode,".")."/".str_replace(".","_",$rescode)."_".$restype."-resdata.json");
+      }else{
+        $jsonf=combineurl(localroot(),"/remotexres/receive/".$restype."/".$rescode."/".$rescode."_".$restype."-resdata.json");  
+      }
       $uu=takevaljson($jsonf);
       $succx=$succx+tornx($uu);
    }
